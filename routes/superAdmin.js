@@ -20,9 +20,6 @@ const ResalePolicy = require('../models/ResalePolicy');
 
 const router = express.Router();
 
-// Apply middleware to all routes (except login)
-router.use(attachAuditContext);
-
 /**
  * @route   POST /sa/login
  * @desc    Super admin login
@@ -32,76 +29,111 @@ router.post(
 	'/login',
 	asyncHandler(async (req, res) => {
 		const { username, password } = req.body;
+		
+		console.log('Super Admin login attempt:', { username, hasPassword: !!password });
 
 		if (!username || !password) {
 			return res.status(400).json({
 				success: false,
-				error: 'Username and password are required',
+				message: 'Username and password are required',
+				statusCode: 400,
 			});
 		}
 
-		// Find user by email (include password field)
-		const user = await User.findOne({ email: username }).select('+password');
-		if (!user) {
-			return res.status(401).json({
+		try {
+			// Find user by email (include password field)
+			console.log('Searching for user with email:', username);
+			const user = await User.findOne({ email: username }).select('+password');
+			console.log('User found:', user ? { id: user._id, email: user.email, role: user.role, isActive: user.isActive } : null);
+			
+			if (!user) {
+				console.log('No user found for email:', username);
+				return res.status(401).json({
+					success: false,
+					message: 'Invalid credentials',
+					statusCode: 401,
+				});
+			}
+
+			// Check if user is active and has superAdmin role
+			if (!user.isActive || user.role !== 'superAdmin') {
+				console.log('User access denied:', { isActive: user.isActive, role: user.role });
+				return res.status(401).json({
+					success: false,
+					message: 'Access denied. Super admin privileges required.',
+					statusCode: 401,
+				});
+			}
+
+			// Verify password
+			const bcrypt = require('bcrypt');
+			console.log('Verifying password...');
+			const isValidPassword = await bcrypt.compare(password, user.password);
+			console.log('Password valid:', isValidPassword);
+			
+			if (!isValidPassword) {
+				return res.status(401).json({
+					success: false,
+					message: 'Invalid credentials',
+					statusCode: 401,
+				});
+			}
+
+			// Generate JWT token
+			const jwt = require('jsonwebtoken');
+			const { JWT_SECRET } = require('../middlewares/jwtAuth');
+			
+			console.log('Generating JWT token for user:', user._id);
+			console.log('User object before JWT:', { 
+				hasUser: !!user,
+				userId: user ? user._id : 'NO USER',
+				userEmail: user ? user.email : 'NO EMAIL',
+				userRole: user ? user.role : 'NO ROLE'
+			});
+
+			const token = jwt.sign(
+				{
+					id: user._id.toString(),
+					email: user.email,
+					role: user.role,
+				},
+				JWT_SECRET,
+				{ expiresIn: '24h' }
+			);
+
+			// Update last login
+			user.lastLoginAt = new Date();
+			await user.save();
+			
+			console.log('Login successful for user:', user._id);
+
+			res.json({
+				success: true,
+				message: 'Login successful',
+				token,
+				user: {
+					id: user._id,
+					name: user.name,
+					email: user.email,
+					role: user.role,
+				},
+			});
+		} catch (error) {
+			console.error('Super Admin login error:', error);
+			console.error('Error stack:', error.stack);
+			return res.status(400).json({
 				success: false,
-				error: 'Invalid credentials',
+				message: error.message,
+				statusCode: 400,
 			});
 		}
-
-		// Check if user is active and has superAdmin role
-		if (!user.isActive || user.role !== 'superAdmin') {
-			return res.status(401).json({
-				success: false,
-				error: 'Access denied. Super admin privileges required.',
-			});
-		}
-
-		// Verify password
-		const bcrypt = require('bcrypt');
-		const isValidPassword = await bcrypt.compare(password, user.password);
-		if (!isValidPassword) {
-			return res.status(401).json({
-				success: false,
-				error: 'Invalid credentials',
-			});
-		}
-
-		// Generate JWT token
-		const jwt = require('jsonwebtoken');
-		const { JWT_SECRET } = require('../middlewares/jwtAuth');
-
-		const token = jwt.sign(
-			{
-				id: user._id,
-				email: user.email,
-				role: user.role,
-			},
-			JWT_SECRET,
-			{ expiresIn: '24h' }
-		);
-
-		// Update last login
-		user.lastLoginAt = new Date();
-		await user.save();
-
-		res.json({
-			success: true,
-			message: 'Login successful',
-			token,
-			user: {
-				id: user._id,
-				name: user.name,
-				email: user.email,
-				role: user.role,
-			},
-		});
 	})
 );
 
 // Apply authentication and authorization middleware to protected routes
 router.use(authenticateUser);
 router.use(requireSuperAdmin);
+router.use(attachAuditContext);
 
 /**
  * @route   GET /sa/stats
@@ -2337,6 +2369,7 @@ router.post(
 
 		// Audit log
 		await audit(
+			req.auditContext.actor,
 			'public_bank_question_add',
 			'PublicBank',
 			bank._id.toString(),
@@ -2425,6 +2458,7 @@ router.put(
 
 		// Audit log
 		await audit(
+			req.auditContext.actor,
 			'public_bank_question_update',
 			'PublicBank',
 			bank._id.toString(),
@@ -2481,6 +2515,7 @@ router.delete(
 
 		// Audit log
 		await audit(
+			req.auditContext.actor,
 			'public_bank_question_delete',
 			'PublicBank',
 			bank._id.toString(),
@@ -2540,6 +2575,7 @@ router.post(
 
 		// Audit log
 		await audit(
+			req.auditContext.actor,
 			'public_bank_question_duplicate',
 			'PublicBank',
 			bank._id.toString(),
@@ -2791,6 +2827,7 @@ router.post(
 				}
 
 				await audit(
+					req.auditContext.actor,
 					'public_bank_csv_import',
 					'PublicBank',
 					bank._id.toString(),
@@ -2919,6 +2956,7 @@ router.get(
 
 		// Audit log
 		await audit(
+			req.auditContext.actor,
 			'public_bank_csv_export',
 			'PublicBank',
 			bank._id.toString(),
