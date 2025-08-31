@@ -15,43 +15,44 @@
 #### 新增的API端点：
 
 1. **GET `/api/sa/surveys/:id`**
-   - 获取单个survey的详细信息
-   - 包含question bank信息、响应统计、最后活动时间等
-   - 支持super admin权限验证
+    - 获取单个survey的详细信息
+    - 包含question bank信息、响应统计、最后活动时间等
+    - 支持super admin权限验证
 
 2. **PUT `/api/sa/surveys/:id`**
-   - 更新survey信息
-   - 支持编辑title、description、type、status、timeLimit等字段
-   - 自动同步isActive和status字段
-   - 包含审计日志记录
+    - 更新survey信息
+    - 支持编辑title、description、type、status、timeLimit等字段
+    - 自动同步isActive和status字段
+    - 包含审计日志记录
 
 #### 增强的API端点：
 
 1. **GET `/api/sa/companies/:id/surveys`**
-   - 返回更多survey字段信息
-   - 包含description、timeLimit、maxAttempts、instructions、navigationMode等
+    - 返回更多survey字段信息
+    - 包含description、timeLimit、maxAttempts、instructions、navigationMode等
 
 ### 2. 前端组件
 
 #### 新增组件：
 
 1. **SurveyDetailModal** (`super-admin/src/components/companies/SurveyDetailModal.tsx`)
-   - 完整的survey详情查看和编辑界面
-   - 支持两种模式：查看模式和编辑模式
-   - 包含所有主要survey字段的表单
-   - 实时错误处理和成功消息显示
+    - 完整的survey详情查看和编辑界面
+    - 支持两种模式：查看模式和编辑模式
+    - 包含所有主要survey字段的表单
+    - 实时错误处理和成功消息显示
 
 #### 增强的组件：
 
 1. **CompanyDetailView** (`super-admin/src/components/companies/CompanyDetailView.tsx`)
-   - 添加了survey行点击功能
-   - 集成了SurveyDetailModal
-   - 支持实时数据更新
-   - 改进了UI交互体验
+    - 添加了survey行点击功能
+    - 集成了SurveyDetailModal
+    - 支持实时数据更新
+    - 改进了UI交互体验
 
 ### 3. 主要特性
 
 #### 查看功能：
+
 - Survey基本信息（标题、类型、状态、创建时间）
 - 详细配置（时间限制、最大尝试次数、说明、导航模式）
 - 关联信息（问题库、问题数量、响应数量）
@@ -59,12 +60,14 @@
 - 安全和评分设置
 
 #### 编辑功能：
+
 - 支持编辑所有主要survey字段
 - 实时表单验证
 - 状态同步（active/inactive与draft/active/closed）
 - 成功/错误消息反馈
 
 #### 用户体验：
+
 - 响应式设计，支持不同屏幕尺寸
 - 悬停效果和点击反馈
 - 加载状态指示器
@@ -133,11 +136,13 @@
 ## 部署说明
 
 ### 后端部署：
+
 - 新的API端点已添加到现有路由中
 - 无需额外配置，使用现有认证系统
 - 数据库模型无需修改
 
 ### 前端部署：
+
 - 新组件已添加到super admin项目中
 - 使用现有构建和部署流程
 - 无需额外依赖

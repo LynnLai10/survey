@@ -27,21 +27,21 @@ interface PreviewData {
 }
 
 interface PublicBankPreviewModalProps {
-        isOpen: boolean;
-        onClose: () => void;
-        bankId: string;
-        bankTitle: string;
-        bankType: string;
-        onCopyQuestions?: (bankId: string, questionIds: string[]) => void;
+	isOpen: boolean;
+	onClose: () => void;
+	bankId: string;
+	bankTitle: string;
+	bankType: string;
+	onCopyQuestions?: (bankId: string, questionIds: string[]) => void;
 }
 
 const PublicBankPreviewModal: React.FC<PublicBankPreviewModalProps> = ({
-        isOpen,
-        onClose,
-        bankId,
-        bankTitle,
-        bankType,
-        onCopyQuestions,
+	isOpen,
+	onClose,
+	bankId,
+	bankTitle,
+	bankType,
+	onCopyQuestions,
 }) => {
 	const { t } = useTranslation('admin');
 	const [loading, setLoading] = useState(false);
@@ -265,9 +265,9 @@ const PublicBankPreviewModal: React.FC<PublicBankPreviewModalProps> = ({
 
 	if (!isOpen) return null;
 
-        return (
-                <Modal show={isOpen} onClose={onClose} size='large'>
-                        <div className='space-y-4'>
+	return (
+		<Modal show={isOpen} onClose={onClose} size='large'>
+			<div className='space-y-4'>
 				{loading && (
 					<div className='flex items-center justify-center py-8'>
 						<div className='animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600'></div>
@@ -282,27 +282,27 @@ const PublicBankPreviewModal: React.FC<PublicBankPreviewModalProps> = ({
 
 				{previewData && (
 					<>
-                                                {/* Header */}
-                                                <div className='flex items-center justify-between pb-4 border-b'>
-                                                        <div>
-                                                                <div className='flex items-center gap-2'>
-                                                                        <h2 className='text-xl font-semibold text-gray-800'>
-                                                                                {previewData.bankTitle}
-                                                                        </h2>
-                                                                        {bankType.toLowerCase() === 'free' && (
-                                                                                <span className='px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-700'>
-                                                                                        Free
-                                                                                </span>
-                                                                        )}
-                                                                </div>
-                                                                <p className='text-sm text-gray-600'>
-                                                                        {previewData.hasAccess
-                                                                                ? `${previewData.questions.length} questions`
-                                                                                : `Preview of ${previewData.questions.length}/${previewData.totalQuestions} questions`}
-                                                                </p>
-                                                        </div>
+						{/* Header */}
+						<div className='flex items-center justify-between pb-4 border-b'>
+							<div>
+								<div className='flex items-center gap-2'>
+									<h2 className='text-xl font-semibold text-gray-800'>
+										{previewData.bankTitle}
+									</h2>
+									{bankType.toLowerCase() === 'free' && (
+										<span className='px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-700'>
+											Free
+										</span>
+									)}
+								</div>
+								<p className='text-sm text-gray-600'>
+									{previewData.hasAccess
+										? `${previewData.questions.length} questions`
+										: `Preview of ${previewData.questions.length}/${previewData.totalQuestions} questions`}
+								</p>
+							</div>
 
-                                                        <div className='flex items-center gap-2'>
+							<div className='flex items-center gap-2'>
 								{/* Show Answers Toggle */}
 								{previewData.hasAccess && (
 									<label className='flex items-center gap-2 cursor-pointer'>

@@ -229,7 +229,6 @@ export const AdminProvider: React.FC<AdminProviderProps> = ({ children }) => {
 		},
 	});
 
-
 	const [questionBankForm, setQuestionBankForm] = useState<QuestionBankForm>({
 		name: '',
 		description: '',
@@ -449,8 +448,7 @@ export const AdminProvider: React.FC<AdminProviderProps> = ({ children }) => {
 			setSelectedQuestionBankDetail(null);
 			setTab('list');
 			navigate('/admin');
-		} catch (err) {
-		}
+		} catch (err) {}
 	};
 
 	// Profile methods
@@ -474,8 +472,7 @@ export const AdminProvider: React.FC<AdminProviderProps> = ({ children }) => {
 				if (companyResponse.data.success) {
 					companyData = companyResponse.data.company;
 				}
-			} catch (companyErr) {
-			}
+			} catch (companyErr) {}
 
 			setCompanyForm({
 				name: companyData.name || '',

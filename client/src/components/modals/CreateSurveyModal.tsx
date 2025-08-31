@@ -31,7 +31,7 @@ const CreateSurveyModal: React.FC = () => {
 	const handleClose = () => {
 		// Clear the modal
 		setShowCreateModal(false);
-		
+
 		// Reset the survey state to default
 		setNewSurvey({
 			title: '',
@@ -42,7 +42,7 @@ const CreateSurveyModal: React.FC = () => {
 			selectedQuestions: [],
 			multiQuestionBankConfig: [],
 		});
-		
+
 		// Clean up URL parameters if any remain
 		const url = new URL(window.location.href);
 		if (url.searchParams.has('preselectedBank') || url.searchParams.has('t')) {
@@ -50,7 +50,7 @@ const CreateSurveyModal: React.FC = () => {
 			url.searchParams.delete('t');
 			window.history.replaceState({}, document.title, url.pathname + url.search);
 		}
-		
+
 		// Force restore body scroll and clear any stuck states
 		setTimeout(() => {
 			document.body.style.overflow = 'unset';
@@ -183,11 +183,7 @@ const CreateSurveyModal: React.FC = () => {
 			title={t('createModal.title', { defaultValue: 'Create New Survey' })}
 			actions={
 				<div className='flex justify-end space-x-3'>
-					<button
-						type='button'
-						onClick={handleClose}
-						className='btn-secondary'
-					>
+					<button type='button' onClick={handleClose} className='btn-secondary'>
 						{t('createModal.cancel', { defaultValue: 'Cancel' })}
 					</button>
 					<button

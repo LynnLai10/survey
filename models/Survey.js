@@ -398,21 +398,27 @@ surveySchema.virtual('scoringDescription').get(function () {
 
 // Create compound index to ensure slug uniqueness within each company
 // This allows different companies to have surveys with the same slug
-surveySchema.index({ slug: 1, companyId: 1 }, { 
-	unique: true,
-	partialFilterExpression: { 
-		slug: { $exists: true, $type: 'string' },
-		companyId: { $exists: true }
+surveySchema.index(
+	{ slug: 1, companyId: 1 },
+	{
+		unique: true,
+		partialFilterExpression: {
+			slug: { $exists: true, $type: 'string' },
+			companyId: { $exists: true },
+		},
 	}
-});
+);
 
 // For backward compatibility with surveys without companyId
-surveySchema.index({ slug: 1 }, { 
-	unique: true,
-	partialFilterExpression: { 
-		slug: { $exists: true, $type: 'string' },
-		companyId: { $exists: false }
+surveySchema.index(
+	{ slug: 1 },
+	{
+		unique: true,
+		partialFilterExpression: {
+			slug: { $exists: true, $type: 'string' },
+			companyId: { $exists: false },
+		},
 	}
-});
+);
 
 module.exports = mongoose.model('Survey', surveySchema);

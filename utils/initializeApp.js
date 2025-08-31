@@ -19,7 +19,7 @@ async function initializeApp() {
 
 		if (superAdmin) {
 			console.log('✓ Super Admin already exists');
-			
+
 			// Update role to superAdmin if needed
 			if (superAdmin.role !== 'superAdmin') {
 				superAdmin.role = 'superAdmin';

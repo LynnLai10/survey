@@ -58,20 +58,20 @@ const PublicQuestionBankCard: React.FC<PublicQuestionBankCardProps> = ({
 		}
 	};
 
-        // Get type badge style
-        const getTypeBadgeStyle = (type: string) => {
-                return type.toLowerCase() === 'free'
-                        ? 'bg-green-100 text-green-700'
-                        : 'bg-purple-100 text-purple-700';
-        };
+	// Get type badge style
+	const getTypeBadgeStyle = (type: string) => {
+		return type.toLowerCase() === 'free'
+			? 'bg-green-100 text-green-700'
+			: 'bg-purple-100 text-purple-700';
+	};
 
-        // Handle navigation to checkout for free banks
-        const handleGetFree = () => {
-                console.log('analytics:free_bank_checkout_clicked', {
-                        bankId: bank._id,
-                });
-                navigate(`/checkout/bank/${bank._id}`);
-        };
+	// Handle navigation to checkout for free banks
+	const handleGetFree = () => {
+		console.log('analytics:free_bank_checkout_clicked', {
+			bankId: bank._id,
+		});
+		navigate(`/checkout/bank/${bank._id}`);
+	};
 
 	// Handle one-time purchase
 	const handleBuyOnce = async () => {
@@ -360,14 +360,14 @@ const PublicQuestionBankCard: React.FC<PublicQuestionBankCardProps> = ({
 			</div>
 
 			{/* Modals */}
-                        <PublicBankPreviewModal
-                                isOpen={showPreviewModal}
-                                onClose={() => setShowPreviewModal(false)}
-                                bankId={bank._id}
-                                bankTitle={bank.title}
-                                bankType={bank.type}
-                                onCopyQuestions={handleCopyQuestions}
-                        />
+			<PublicBankPreviewModal
+				isOpen={showPreviewModal}
+				onClose={() => setShowPreviewModal(false)}
+				bankId={bank._id}
+				bankTitle={bank.title}
+				bankType={bank.type}
+				onCopyQuestions={handleCopyQuestions}
+			/>
 
 			{copyData && (
 				<CopyQuestionsModal

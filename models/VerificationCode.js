@@ -44,31 +44,38 @@ verificationCodeSchema.index({ email: 1, type: 1, isUsed: 1 });
 verificationCodeSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
 
 // Static method to generate 6-digit verification code
-verificationCodeSchema.statics.generateCode = function() {
+verificationCodeSchema.statics.generateCode = function () {
 	return Math.floor(100000 + Math.random() * 900000).toString();
 };
 
 // Static method to create or update verification code
-verificationCodeSchema.statics.createOrUpdateCode = async function(email, type = 'email_verification') {
+verificationCodeSchema.statics.createOrUpdateCode = async function (
+	email,
+	type = 'email_verification'
+) {
 	// Delete previous unused verification codes for this email
 	await this.deleteMany({ email, type, isUsed: false });
-	
+
 	// Generate new verification code
 	const code = this.generateCode();
-	
+
 	// Create new verification code record
 	const verificationCode = new this({
 		email,
 		code,
 		type,
 	});
-	
+
 	await verificationCode.save();
 	return verificationCode;
 };
 
 // Static method to verify verification code (marks as used)
-verificationCodeSchema.statics.verifyCode = async function(email, code, type = 'email_verification') {
+verificationCodeSchema.statics.verifyCode = async function (
+	email,
+	code,
+	type = 'email_verification'
+) {
 	// First, find any verification code for this email (regardless of the code value)
 	const anyVerificationCode = await this.findOne({
 		email,
@@ -79,7 +86,10 @@ verificationCodeSchema.statics.verifyCode = async function(email, code, type = '
 
 	if (!anyVerificationCode) {
 		// No verification code exists or all are expired
-		return { success: false, message: 'No valid verification code found. Please request a new one.' };
+		return {
+			success: false,
+			message: 'No valid verification code found. Please request a new one.',
+		};
 	}
 
 	// Check attempt count first
@@ -103,7 +113,11 @@ verificationCodeSchema.statics.verifyCode = async function(email, code, type = '
 };
 
 // Static method to verify verification code without marking as used (for intermediate verification)
-verificationCodeSchema.statics.checkCode = async function(email, code, type = 'email_verification') {
+verificationCodeSchema.statics.checkCode = async function (
+	email,
+	code,
+	type = 'email_verification'
+) {
 	// First, find any verification code for this email (regardless of the code value)
 	const anyVerificationCode = await this.findOne({
 		email,
@@ -114,7 +128,10 @@ verificationCodeSchema.statics.checkCode = async function(email, code, type = 'e
 
 	if (!anyVerificationCode) {
 		// No verification code exists or all are expired
-		return { success: false, message: 'No valid verification code found. Please request a new one.' };
+		return {
+			success: false,
+			message: 'No valid verification code found. Please request a new one.',
+		};
 	}
 
 	// Check attempt count first
@@ -135,22 +152,30 @@ verificationCodeSchema.statics.checkCode = async function(email, code, type = 'e
 };
 
 // Static method to check email verification code sending frequency
-verificationCodeSchema.statics.canSendCode = async function(email, type = 'email_verification', intervalMinutes = 1) {
+verificationCodeSchema.statics.canSendCode = async function (
+	email,
+	type = 'email_verification',
+	intervalMinutes = 1
+) {
 	const recentCode = await this.findOne({
 		email,
 		type,
-		createdAt: { $gte: new Date(Date.now() - intervalMinutes * 60 * 1000) }
+		createdAt: { $gte: new Date(Date.now() - intervalMinutes * 60 * 1000) },
 	});
 
 	return !recentCode;
 };
 
 // Get next available time to send verification code
-verificationCodeSchema.statics.getNextSendTime = async function(email, type = 'email_verification', intervalMinutes = 1) {
+verificationCodeSchema.statics.getNextSendTime = async function (
+	email,
+	type = 'email_verification',
+	intervalMinutes = 1
+) {
 	const recentCode = await this.findOne({
 		email,
 		type,
-		createdAt: { $gte: new Date(Date.now() - intervalMinutes * 60 * 1000) }
+		createdAt: { $gte: new Date(Date.now() - intervalMinutes * 60 * 1000) },
 	}).sort({ createdAt: -1 });
 
 	if (!recentCode) {

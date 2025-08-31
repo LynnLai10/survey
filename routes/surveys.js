@@ -31,13 +31,15 @@ router.get(
 		// Get company information from survey creators
 		let companyInfo = null;
 		const surveysWithCompany = [];
-		
+
 		for (const survey of surveys) {
 			let surveyCompanyInfo = null;
-			
+
 			try {
 				if (survey.createdBy) {
-					const surveyCreator = await User.findById(survey.createdBy).populate('companyId');
+					const surveyCreator = await User.findById(survey.createdBy).populate(
+						'companyId'
+					);
 					if (surveyCreator && surveyCreator.companyId) {
 						surveyCompanyInfo = {
 							name: surveyCreator.companyId.name,
@@ -48,7 +50,7 @@ router.get(
 						};
 					}
 				}
-				
+
 				// Fallback to any admin user if survey creator not found or no company
 				if (!surveyCompanyInfo && !companyInfo) {
 					const adminUser = await User.findOne({ role: 'admin' }).populate('companyId');
@@ -66,7 +68,7 @@ router.get(
 				console.error('Error fetching company info:', error);
 				// Continue without company info if there's an error
 			}
-			
+
 			surveysWithCompany.push({
 				...survey,
 				company: surveyCompanyInfo || companyInfo,
@@ -99,7 +101,7 @@ router.get(
 					};
 				}
 			}
-			
+
 			// Fallback to any admin user if survey creator not found or no company
 			if (!companyInfo) {
 				const adminUser = await User.findOne({ role: 'admin' }).populate('companyId');
@@ -158,7 +160,7 @@ router.get(
 					};
 				}
 			}
-			
+
 			// Fallback to any admin user if survey creator not found or no company
 			if (!companyInfo) {
 				const adminUser = await User.findOne({ role: 'admin' }).populate('companyId');

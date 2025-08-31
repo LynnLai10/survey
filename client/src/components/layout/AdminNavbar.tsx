@@ -187,9 +187,7 @@ const AdminNavbar: React.FC = () => {
 										className='flex items-center gap-3 w-full px-4 py-3 text-left text-gray-700 hover:bg-red-50 hover:text-red-600 transition-colors duration-200 cursor-pointer'
 									>
 										<ArrowRightOnRectangleIcon className='w-5 h-5' />
-										<span className='text-sm'>
-											{tCommon('buttons.logout')}
-										</span>
+										<span className='text-sm'>{tCommon('buttons.logout')}</span>
 									</button>
 								</div>
 							)}
@@ -271,7 +269,9 @@ const AdminNavbar: React.FC = () => {
 						>
 							<ClockIcon className='w-5 h-5' />
 							<span className='text-sm'>
-								{tCommon('navigation.purchaseHistory', { defaultValue: 'Purchase History' })}
+								{tCommon('navigation.purchaseHistory', {
+									defaultValue: 'Purchase History',
+								})}
 							</span>
 						</button>
 

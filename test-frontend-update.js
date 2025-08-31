@@ -6,21 +6,21 @@ console.log('🚀 Testing Frontend User Update Functionality...\n');
 
 // Simulate the user data structure
 const mockUser = {
-    _id: '507f1f77bcf86cd799439011',
-    name: 'John Doe',
-    email: 'john.doe@example.com',
-    role: 'admin',
-    department: 'Engineering',
-    studentId: 'A001',
-    class: '2024-A',
-    isActive: true,
-    createdAt: new Date().toISOString(),
-    lastLoginAt: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(), // 1 day ago
-    companyId: {
-        _id: '507f1f77bcf86cd799439012',
-        name: 'Test Company',
-        slug: 'test-company'
-    }
+	_id: '507f1f77bcf86cd799439011',
+	name: 'John Doe',
+	email: 'john.doe@example.com',
+	role: 'admin',
+	department: 'Engineering',
+	studentId: 'A001',
+	class: '2024-A',
+	isActive: true,
+	createdAt: new Date().toISOString(),
+	lastLoginAt: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(), // 1 day ago
+	companyId: {
+		_id: '507f1f77bcf86cd799439012',
+		name: 'Test Company',
+		slug: 'test-company',
+	},
 };
 
 console.log('📋 Original User Data:');
@@ -37,11 +37,11 @@ console.log('Company:', mockUser.companyId?.name || 'No company');
 console.log('\n✏️ Simulating User Update...');
 
 const updateData = {
-    name: 'John Smith Updated',
-    department: 'Software Engineering',
-    role: 'manager',
-    class: '2024-B',
-    studentId: 'A002'
+	name: 'John Smith Updated',
+	department: 'Software Engineering',
+	role: 'manager',
+	class: '2024-B',
+	studentId: 'A002',
 };
 
 console.log('Update data to be sent:');
@@ -49,9 +49,9 @@ console.log(JSON.stringify(updateData, null, 2));
 
 // Simulate the update process
 const updatedUser = {
-    ...mockUser,
-    ...updateData,
-    updatedAt: new Date().toISOString()
+	...mockUser,
+	...updateData,
+	updatedAt: new Date().toISOString(),
 };
 
 console.log('\n✅ Updated User Data:');
@@ -68,44 +68,44 @@ console.log('Company:', updatedUser.companyId?.name || 'No company');
 console.log('\n🔍 Testing Frontend Form Validation...');
 
 function validateUserForm(formData) {
-    const errors = [];
-    
-    if (!formData.name || formData.name.trim().length < 2) {
-        errors.push('Name must be at least 2 characters long');
-    }
-    
-    if (!formData.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-        errors.push('Valid email is required');
-    }
-    
-    if (!['admin', 'manager', 'teacher', 'student', 'user'].includes(formData.role)) {
-        errors.push('Valid role is required');
-    }
-    
-    return {
-        isValid: errors.length === 0,
-        errors
-    };
+	const errors = [];
+
+	if (!formData.name || formData.name.trim().length < 2) {
+		errors.push('Name must be at least 2 characters long');
+	}
+
+	if (!formData.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+		errors.push('Valid email is required');
+	}
+
+	if (!['admin', 'manager', 'teacher', 'student', 'user'].includes(formData.role)) {
+		errors.push('Valid role is required');
+	}
+
+	return {
+		isValid: errors.length === 0,
+		errors,
+	};
 }
 
 // Test valid data
 const validationResult1 = validateUserForm(updateData);
 console.log('Valid form data:', validationResult1.isValid ? '✅ Passed' : '❌ Failed');
 if (!validationResult1.isValid) {
-    console.log('Errors:', validationResult1.errors);
+	console.log('Errors:', validationResult1.errors);
 }
 
 // Test invalid data
 const invalidData = {
-    name: 'J',
-    email: 'invalid-email',
-    role: 'invalid-role'
+	name: 'J',
+	email: 'invalid-email',
+	role: 'invalid-role',
 };
 
 const validationResult2 = validateUserForm(invalidData);
 console.log('Invalid form data:', validationResult2.isValid ? '✅ Passed' : '❌ Failed (Expected)');
 if (!validationResult2.isValid) {
-    console.log('Validation errors (expected):', validationResult2.errors);
+	console.log('Validation errors (expected):', validationResult2.errors);
 }
 
 // Simulate password reset
@@ -117,7 +117,9 @@ console.log('User would be flagged to change password on next login');
 // Simulate status toggle
 console.log('\n🔄 Testing Status Toggle Simulation...');
 const newStatus = !updatedUser.isActive;
-console.log(`Status would change from ${updatedUser.isActive ? 'Active' : 'Inactive'} to ${newStatus ? 'Active' : 'Inactive'}`);
+console.log(
+	`Status would change from ${updatedUser.isActive ? 'Active' : 'Inactive'} to ${newStatus ? 'Active' : 'Inactive'}`
+);
 
 // Test API endpoint structure
 console.log('\n🔗 API Endpoints that would be called:');
@@ -140,10 +142,20 @@ console.log('Success message displayed for 3 seconds');
 // Test the user interface elements
 console.log('\n🎨 UI Elements Test:');
 console.log('✅ User avatar with initials: ' + updatedUser.name.charAt(0).toUpperCase());
-console.log('✅ Role badge color: ' + (updatedUser.role === 'admin' ? 'purple' : updatedUser.role === 'manager' ? 'blue' : 'gray'));
-console.log('✅ Status badge: ' + (updatedUser.isActive ? '✅ Active (green)' : '❌ Inactive (red)'));
-console.log('✅ Registration date formatted: ' + new Date(updatedUser.createdAt).toLocaleDateString());
-console.log('✅ Last login formatted: ' + (updatedUser.lastLoginAt ? new Date(updatedUser.lastLoginAt).toLocaleDateString() : 'Never'));
+console.log(
+	'✅ Role badge color: ' +
+		(updatedUser.role === 'admin' ? 'purple' : updatedUser.role === 'manager' ? 'blue' : 'gray')
+);
+console.log(
+	'✅ Status badge: ' + (updatedUser.isActive ? '✅ Active (green)' : '❌ Inactive (red)')
+);
+console.log(
+	'✅ Registration date formatted: ' + new Date(updatedUser.createdAt).toLocaleDateString()
+);
+console.log(
+	'✅ Last login formatted: ' +
+		(updatedUser.lastLoginAt ? new Date(updatedUser.lastLoginAt).toLocaleDateString() : 'Never')
+);
 
 console.log('\n🎉 Frontend Update Functionality Test Complete!');
 console.log('\n📝 Summary:');

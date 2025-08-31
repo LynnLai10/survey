@@ -41,20 +41,20 @@ aws s3 sync dist/ s3://${CLIENT_S3_BUCKET}/super-admin/ --delete
 ### Jenkinsfile_uat 修改摘要
 
 1. **构建阶段改进**：
-   - 添加构建前清理
-   - 详细的文件验证
-   - 构建内容预览
+    - 添加构建前清理
+    - 详细的文件验证
+    - 构建内容预览
 
 2. **部署阶段改进**：
-   - 自动备份现有部署
-   - 移除Super Admin的`--delete`参数
-   - 客户端部署排除Super Admin目录
-   - 添加部署验证
+    - 自动备份现有部署
+    - 移除Super Admin的`--delete`参数
+    - 客户端部署排除Super Admin目录
+    - 添加部署验证
 
 3. **新增健康检查阶段**：
-   - 全面的部署后验证
-   - 连通性测试
-   - 详细的状态报告
+    - 全面的部署后验证
+    - 连通性测试
+    - 详细的状态报告
 
 ## 使用的工具脚本
 
@@ -67,6 +67,7 @@ aws s3 sync dist/ s3://${CLIENT_S3_BUCKET}/super-admin/ --delete
 ```
 
 功能：
+
 - 检查客户端和Super Admin的`index.html`
 - 验证资源文件完整性
 - 列出备份文件
@@ -81,6 +82,7 @@ aws s3 sync dist/ s3://${CLIENT_S3_BUCKET}/super-admin/ --delete
 ```
 
 功能：
+
 - 快速回滚到指定备份
 - 自动创建紧急备份
 - 验证回滚结果
@@ -88,11 +90,13 @@ aws s3 sync dist/ s3://${CLIENT_S3_BUCKET}/super-admin/ --delete
 ## 部署流程改进
 
 ### 之前的问题流程
+
 ```
 构建 → 直接同步到S3(--delete) → 可能删除关键文件
 ```
 
 ### 现在的安全流程
+
 ```
 构建 → 验证构建文件 → 创建备份 → 安全同步 → 部署验证 → 健康检查
 ```
@@ -118,32 +122,35 @@ aws s3 sync dist/ s3://${CLIENT_S3_BUCKET}/super-admin/ --delete
 ### 如果Super Admin仍然无法访问：
 
 1. 运行验证脚本：
-   ```bash
-   ./verify-deployment.sh
-   ```
+
+    ```bash
+    ./verify-deployment.sh
+    ```
 
 2. 检查最近的备份：
-   ```bash
-   aws s3 ls s3://uat.sigmaq.co/ | grep super-admin-backup
-   ```
+
+    ```bash
+    aws s3 ls s3://uat.sigmaq.co/ | grep super-admin-backup
+    ```
 
 3. 如需回滚：
-   ```bash
-   ./rollback-deployment.sh [backup-timestamp]
-   ```
+
+    ```bash
+    ./rollback-deployment.sh [backup-timestamp]
+    ```
 
 4. 重新部署：
-   - 触发Jenkins UAT管道
-   - 检查构建日志中的验证步骤
-   - 确认健康检查通过
+    - 触发Jenkins UAT管道
+    - 检查构建日志中的验证步骤
+    - 确认健康检查通过
 
 ## 文件备份
 
 - 原始Jenkinsfile已备份为`Jenkinsfile_uat.backup`
 - 可以随时对比查看修改内容：
-  ```bash
-  diff -u Jenkinsfile_uat.backup Jenkinsfile_uat
-  ```
+    ```bash
+    diff -u Jenkinsfile_uat.backup Jenkinsfile_uat
+    ```
 
 ## 总结
 

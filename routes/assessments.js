@@ -15,7 +15,6 @@ const {
 
 const router = express.Router();
 
-
 function maskQuestions(questions) {
 	return (questions || []).map(q => {
 		const { correctAnswer, explanation, ...rest } = q.toObject ? q.toObject() : q;
@@ -33,17 +32,17 @@ async function findSurveyWithCompat(slug, req) {
 	// Debug logging removed
 
 	let survey = null;
-	
+
 	if (req.company) {
 		// Multi-tenant mode: search within company first
 		const companyQuery = { slug, status: SURVEY_STATUS.ACTIVE, companyId: req.company._id };
 		//debugLog('Searching within company', companyQuery);
 		survey = await Survey.findOne(companyQuery);
-		
+
 		if (survey) {
 			// Survey found in company
 		}
-		
+
 		// If not found by slug, try by ID within company
 		if (!survey && mongoose.Types.ObjectId.isValid(slug)) {
 			const idQuery = { _id: slug, status: SURVEY_STATUS.ACTIVE, companyId: req.company._id };
@@ -53,17 +52,14 @@ async function findSurveyWithCompat(slug, req) {
 				// Survey found by ID in company
 			}
 		}
-		
+
 		// Backward compatibility: if still not found, check legacy surveys (no companyId)
 		if (!survey) {
 			// Assessment not found in company, checking legacy surveys
-			const legacyQuery = { 
-				slug, 
-				status: SURVEY_STATUS.ACTIVE, 
-				$or: [
-					{ companyId: { $exists: false } },
-					{ companyId: null }
-				]
+			const legacyQuery = {
+				slug,
+				status: SURVEY_STATUS.ACTIVE,
+				$or: [{ companyId: { $exists: false } }, { companyId: null }],
 			};
 			//debugLog('Searching legacy surveys', legacyQuery);
 			survey = await Survey.findOne(legacyQuery);
@@ -71,9 +67,11 @@ async function findSurveyWithCompat(slug, req) {
 				// Found legacy survey
 			} else {
 				//debugLog('No legacy surveys found');
-				
+
 				// Debug: Show all surveys with this slug to help troubleshoot
-				const allSurveysWithSlug = await Survey.find({ slug }).select('_id title slug companyId status type');
+				const allSurveysWithSlug = await Survey.find({ slug }).select(
+					'_id title slug companyId status type'
+				);
 				// Log all surveys with this slug
 			}
 		}
@@ -83,22 +81,22 @@ async function findSurveyWithCompat(slug, req) {
 		const globalQuery = { slug, status: SURVEY_STATUS.ACTIVE };
 		//debugLog('Global search query', globalQuery);
 		survey = await Survey.findOne(globalQuery);
-		
+
 		if (!survey && mongoose.Types.ObjectId.isValid(slug)) {
 			const idQuery = { _id: slug, status: SURVEY_STATUS.ACTIVE };
 			//debugLog('Trying global search by ID', idQuery);
 			survey = await Survey.findOne(idQuery);
 		}
-		
+
 		if (survey) {
 			// Found survey in global search
 		} else {
 			//debugLog('No survey found in global search');
 		}
 	}
-	
+
 	// Survey search completed
-	
+
 	return survey;
 }
 
@@ -107,9 +105,9 @@ router.get(
 	'/assessment/:slug',
 	asyncHandler(async (req, res) => {
 		const { slug } = req.params;
-		
+
 		// GET /assessment/:slug called
-		
+
 		let survey = await findSurveyWithCompat(slug, req);
 		if (!survey) {
 			// Survey not found
@@ -127,27 +125,27 @@ router.get(
 
 		// Never include questions in this metadata response
 		survey.questions = [];
-		
+
 		// Ensure securitySettings is included in the response
 		const response = {
 			...survey,
 			securitySettings: survey.securitySettings || {
-				antiCheatEnabled: false
-			}
+				antiCheatEnabled: false,
+			},
 		};
-		
+
 		// Add debug headers if debug is enabled
 		if (process.env.ASSESSMENT_DEBUG === 'true') {
 			res.set({
 				'X-Debug-Survey-Id': survey._id.toString(),
 				'X-Debug-Company-Id': survey.companyId?.toString() || 'null',
 				'X-Debug-Survey-Type': survey.type,
-				'X-Debug-Company-Slug': req.company?.slug || 'none'
+				'X-Debug-Company-Slug': req.company?.slug || 'none',
 			});
 		}
-		
+
 		// Returning assessment metadata
-		
+
 		res.json(response);
 	})
 );
@@ -196,26 +194,26 @@ router.post(
 				if (!questionBank) {
 					throw new AppError('Question bank not found', HTTP_STATUS.NOT_FOUND);
 				}
-				
+
 				// Separate required and optional questions
 				const requiredQuestions = questionBank.questions.filter(q => q.isRequired);
 				const optionalQuestions = questionBank.questions.filter(q => !q.isRequired);
-				
+
 				const maxQuestionCount = Math.min(
 					survey.questionCount || questionBank.questions.length,
 					questionBank.questions.length
 				);
-				
+
 				// Always include all required questions
 				selectedQuestions = [...requiredQuestions];
-				
+
 				// Fill remaining slots with optional questions if there's space
 				const remainingSlots = Math.max(0, maxQuestionCount - requiredQuestions.length);
 				if (remainingSlots > 0 && optionalQuestions.length > 0) {
 					const shuffledOptional = optionalQuestions.sort(() => 0.5 - Math.random());
 					selectedQuestions.push(...shuffledOptional.slice(0, remainingSlots));
 				}
-				
+
 				// Shuffle the final question order
 				selectedQuestions = selectedQuestions.sort(() => 0.5 - Math.random());
 			} else if (survey.sourceType === SOURCE_TYPE.MULTI_QUESTION_BANK) {
@@ -237,7 +235,7 @@ router.post(
 						);
 					}
 					let bankQuestions = [...questionBank.questions];
-					
+
 					// Apply filters
 					if (config.filters) {
 						if (config.filters.tags && config.filters.tags.length > 0) {
@@ -259,16 +257,19 @@ router.post(
 							);
 						}
 					}
-					
+
 					// Separate required and optional questions from this bank
 					const requiredFromBank = bankQuestions.filter(q => q.isRequired);
 					const optionalFromBank = bankQuestions.filter(q => !q.isRequired);
-					
+
 					// Always include required questions from this bank
 					selectedQuestions.push(...requiredFromBank);
-					
+
 					// Fill remaining slots for this bank with optional questions
-					const remainingSlotsForBank = Math.max(0, config.questionCount - requiredFromBank.length);
+					const remainingSlotsForBank = Math.max(
+						0,
+						config.questionCount - requiredFromBank.length
+					);
 					if (remainingSlotsForBank > 0 && optionalFromBank.length > 0) {
 						const shuffledOptional = optionalFromBank.sort(() => 0.5 - Math.random());
 						const selectedOptional = shuffledOptional.slice(0, remainingSlotsForBank);
@@ -616,6 +617,5 @@ router.post(
 		});
 	})
 );
-
 
 module.exports = router;

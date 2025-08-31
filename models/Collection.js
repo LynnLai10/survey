@@ -7,10 +7,10 @@ const collectionSchema = new mongoose.Schema(
 		surveyIds: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Survey' }],
 		tags: [{ type: String }],
 		companyId: { type: mongoose.Schema.Types.ObjectId, ref: 'Company', index: true },
-		createdBy: { 
+		createdBy: {
 			type: mongoose.Schema.Types.Mixed, // Allow both ObjectId and String for legacy admin
 			required: true,
-			index: true 
+			index: true,
 		},
 	},
 	{ timestamps: true }

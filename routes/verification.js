@@ -90,7 +90,6 @@ router.post('/send-code', sendCodeLimiter, async (req, res) => {
 				expiresIn: 300, // 5 minutes
 			});
 		} catch (emailError) {
-	
 			// If email sending fails, delete the created verification code
 			await VerificationCode.findByIdAndDelete(verificationCode._id);
 

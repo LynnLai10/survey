@@ -2,7 +2,7 @@
 
 **SigmaQ** ([sigmaq.co](https://sigmaq.co)) is a comprehensive, enterprise-grade survey and assessment platform built for modern organizations. It combines powerful question bank management, AI-driven features, and flexible survey types to deliver professional assessment experiences.
 
-*SigmaQ is proudly developed by **[JR Academy](https://jracademy.ai)** - Building the future of learning and assessment technology.*
+_SigmaQ is proudly developed by **[JR Academy](https://jracademy.ai)** - Building the future of learning and assessment technology._
 
 ## 🚀 Platform Overview
 
@@ -10,13 +10,14 @@ SigmaQ is designed as a multi-tenant SaaS platform that enables organizations to
 
 - **Create Professional Assessments**: Build skill-based assessments, knowledge tests, and employee evaluations
 - **Manage Question Banks**: Organize reusable question libraries with advanced categorization
-- **Collect Survey Data**: Gather feedback through surveys, onboarding flows, and live quizzes  
+- **Collect Survey Data**: Gather feedback through surveys, onboarding flows, and live quizzes
 - **Analyze Results**: Get actionable insights with built-in analytics and reporting
 - **Scale Operations**: Support multiple companies with role-based access control
 
 ## 🎯 Core Features
 
 ### 📚 Question Bank Management
+
 - **Centralized Library**: Organize questions by topic, difficulty, and tags
 - **Required Questions**: Mark questions as mandatory for assessments
 - **Import/Export**: CSV import with validation and bulk operations
@@ -24,6 +25,7 @@ SigmaQ is designed as a multi-tenant SaaS platform that enables organizations to
 - **Rich Content**: Support for markdown descriptions and image attachments
 
 ### 🎯 Assessment Types
+
 - **Skills Assessment**: Technical and professional skill evaluation
 - **Knowledge Tests**: Quiz-style assessments with automatic scoring
 - **Survey Collection**: Feedback and opinion gathering
@@ -31,6 +33,7 @@ SigmaQ is designed as a multi-tenant SaaS platform that enables organizations to
 - **Live Quizzes**: Real-time interactive question sessions
 
 ### 🎨 Survey Builder
+
 - **Flexible Sources**: Create from question banks, manual selection, or multi-bank combinations
 - **Question Types**: Single choice, multiple choice, and short text responses
 - **Smart Selection**: Automatic question selection with required question enforcement
@@ -38,6 +41,7 @@ SigmaQ is designed as a multi-tenant SaaS platform that enables organizations to
 - **Anti-Cheat Protection**: Built-in security measures for assessment integrity
 
 ### 📊 Analytics & Insights
+
 - **Real-time Results**: Live response tracking and statistics
 - **Candidate Profiles**: Detailed individual performance analysis
 - **Response Analytics**: Question-level performance metrics
@@ -45,6 +49,7 @@ SigmaQ is designed as a multi-tenant SaaS platform that enables organizations to
 - **Visual Charts**: Interactive data visualization with Recharts
 
 ### 🛡️ Security & Administration
+
 - **Multi-tenant Architecture**: Complete data isolation between organizations
 - **Role-based Access**: Admin, user, and super-admin permission levels
 - **JWT Authentication**: Secure token-based authentication system
@@ -54,6 +59,7 @@ SigmaQ is designed as a multi-tenant SaaS platform that enables organizations to
 ## 🏗️ Technical Architecture
 
 ### Backend Stack
+
 - **Runtime**: Node.js 20+ with Express.js framework
 - **Database**: MongoDB with Mongoose ODM for data modeling
 - **Authentication**: JWT-based auth with bcrypt password hashing
@@ -63,6 +69,7 @@ SigmaQ is designed as a multi-tenant SaaS platform that enables organizations to
 - **Validation**: Zod schemas for runtime type checking
 
 ### Frontend Stack
+
 - **Framework**: React 18 with TypeScript for type safety
 - **Build Tool**: Vite for fast development and optimized builds
 - **Styling**: Tailwind CSS with custom component library
@@ -76,6 +83,7 @@ SigmaQ is designed as a multi-tenant SaaS platform that enables organizations to
 - **Animations**: Framer Motion for smooth transitions
 
 ### Additional Tools
+
 - **Internationalization**: i18next for multi-language support (EN/中文)
 - **Code Quality**: ESLint + Prettier for consistent code formatting
 - **Type Safety**: Full TypeScript coverage across frontend and backend APIs
@@ -138,13 +146,16 @@ sigmaq/
 ## 🌐 Application Architecture
 
 ### Multi-Tenant Design
+
 SigmaQ uses a **domain-based multi-tenancy** approach:
+
 - Each organization gets a subdomain: `{company}.sigmaq.co`
 - Complete data isolation between tenants
 - Shared infrastructure with tenant-specific routing
 - Cross-tenant administration through super-admin interface
 
 ### Survey Source Types
+
 The platform supports multiple question sources:
 
 1. **Manual Creation** (`manual`): Questions created directly in the survey
@@ -153,6 +164,7 @@ The platform supports multiple question sources:
 4. **Manual Selection** (`manual_selection`): Cherry-pick specific questions
 
 ### Question Bank Features
+
 - **Hierarchical Organization**: Categories, tags, and difficulty levels
 - **Required Questions**: Enforce specific questions in all assessments
 - **Import/Export**: CSV-based bulk operations with validation
@@ -160,8 +172,9 @@ The platform supports multiple question sources:
 - **Rich Content**: Markdown descriptions and image support
 
 ### Assessment Logic
+
 - **Smart Selection**: Automatically include required questions
-- **Randomization**: Shuffle questions while respecting constraints  
+- **Randomization**: Shuffle questions while respecting constraints
 - **Scoring Engine**: Flexible scoring with percentage and point-based systems
 - **Anti-cheat**: Tab switching detection and time limit enforcement
 - **Response Tracking**: Detailed candidate journey analytics
@@ -169,6 +182,7 @@ The platform supports multiple question sources:
 ## 🚀 Quick Start
 
 ### Prerequisites
+
 - **Node.js** 20+ (recommended: 20.11.0 LTS)
 - **MongoDB** 7+ (local instance or MongoDB Atlas)
 - **npm** or **yarn** package manager
@@ -176,55 +190,59 @@ The platform supports multiple question sources:
 ### Environment Setup
 
 1. **Clone and Install**
-   ```bash
-   git clone <repository-url>
-   cd sigmaq
-   npm install
-   cd client && npm install
-   cd ../super-admin && npm install
-   ```
+
+    ```bash
+    git clone <repository-url>
+    cd sigmaq
+    npm install
+    cd client && npm install
+    cd ../super-admin && npm install
+    ```
 
 2. **Environment Configuration**
    Create `.env` file in root:
-   ```env
-   # Database
-   MONGODB_URI=mongodb://localhost:27017/sigmaq
-   
-   # Authentication
-   JWT_SECRET=your-super-secure-jwt-secret
-   ADMIN_USERNAME=admin
-   ADMIN_PASSWORD=your-admin-password
-   
-   # Server
-   PORT=5050
-   NODE_ENV=development
-   
-   # Services (Optional)
-   STRIPE_SECRET_KEY=sk_test_...
-   CLOUDINARY_CLOUD_NAME=your-cloud
-   CLOUDINARY_API_KEY=your-api-key
-   CLOUDINARY_API_SECRET=your-secret
-   
-   # Email (Optional)
-   EMAIL_HOST=smtp.gmail.com
-   EMAIL_PORT=587
-   EMAIL_USER=your-email
-   EMAIL_PASS=your-password
-   ```
+
+    ```env
+    # Database
+    MONGODB_URI=mongodb://localhost:27017/sigmaq
+
+    # Authentication
+    JWT_SECRET=your-super-secure-jwt-secret
+    ADMIN_USERNAME=admin
+    ADMIN_PASSWORD=your-admin-password
+
+    # Server
+    PORT=5050
+    NODE_ENV=development
+
+    # Services (Optional)
+    STRIPE_SECRET_KEY=sk_test_...
+    CLOUDINARY_CLOUD_NAME=your-cloud
+    CLOUDINARY_API_KEY=your-api-key
+    CLOUDINARY_API_SECRET=your-secret
+
+    # Email (Optional)
+    EMAIL_HOST=smtp.gmail.com
+    EMAIL_PORT=587
+    EMAIL_USER=your-email
+    EMAIL_PASS=your-password
+    ```
 
 3. **Start Development**
-   ```bash
-   # Terminal 1: Backend server
-   npm start
-   
-   # Terminal 2: Frontend development
-   cd client && npm run dev
-   
-   # Terminal 3: Super Admin dashboard (optional)
-   cd super-admin && npm run dev
-   ```
+
+    ```bash
+    # Terminal 1: Backend server
+    npm start
+
+    # Terminal 2: Frontend development
+    cd client && npm run dev
+
+    # Terminal 3: Super Admin dashboard (optional)
+    cd super-admin && npm run dev
+    ```
 
 ### Access Points
+
 - **Public Website**: http://localhost:5173
 - **Admin Dashboard**: http://localhost:5173/admin
 - **Super Admin**: http://localhost:5051/super-admin
@@ -233,9 +251,10 @@ The platform supports multiple question sources:
 ## 📋 API Overview
 
 ### Public Endpoints
+
 ```
 GET    /api/surveys                    # List active surveys
-GET    /api/survey/:slug              # Get survey details  
+GET    /api/survey/:slug              # Get survey details
 POST   /api/surveys/:id/responses     # Submit response
 GET    /api/assessment/:slug          # Get assessment metadata
 POST   /api/assessment/:slug/start    # Start assessment session
@@ -244,12 +263,13 @@ POST   /api/contact                   # Contact form submission
 ```
 
 ### Admin Endpoints (JWT Required)
+
 ```
 POST   /api/admin/login               # Admin authentication
 GET    /api/admin/profile            # Admin profile
 GET    /api/admin/surveys            # List all surveys
 POST   /api/admin/surveys            # Create survey
-PUT    /api/admin/surveys/:id        # Update survey  
+PUT    /api/admin/surveys/:id        # Update survey
 DELETE /api/admin/surveys/:id        # Delete survey
 GET    /api/admin/question-banks     # List question banks
 POST   /api/admin/question-banks     # Create question bank
@@ -257,6 +277,7 @@ GET    /api/admin/collections        # List collections
 ```
 
 ### Super Admin Endpoints (Super Admin Role Required)
+
 ```
 GET    /api/sa/stats                 # System statistics
 GET    /api/sa/companies            # List all companies
@@ -269,23 +290,25 @@ POST   /api/sa/impersonate         # User impersonation
 ## 🎯 Usage Examples
 
 ### Creating an Assessment
+
 1. **Set up Question Bank**:
-   - Navigate to Question Banks tab
-   - Create new bank or import from CSV
-   - Mark important questions as "Required"
+    - Navigate to Question Banks tab
+    - Create new bank or import from CSV
+    - Mark important questions as "Required"
 
 2. **Build Assessment**:
-   - Create new survey with type "Assessment"
-   - Select question bank as source
-   - Set question count and passing threshold
-   - Configure scoring and security settings
+    - Create new survey with type "Assessment"
+    - Select question bank as source
+    - Set question count and passing threshold
+    - Configure scoring and security settings
 
 3. **Deploy & Monitor**:
-   - Activate survey to enable access
-   - Share assessment URL with candidates
-   - Monitor real-time results in admin dashboard
+    - Activate survey to enable access
+    - Share assessment URL with candidates
+    - Monitor real-time results in admin dashboard
 
 ### Multi-Bank Assessments
+
 ```javascript
 // Example configuration for combining multiple question banks
 {
@@ -300,7 +323,7 @@ POST   /api/sa/impersonate         # User impersonation
       }
     },
     {
-      "questionBankId": "bank2_id", 
+      "questionBankId": "bank2_id",
       "questionCount": 3,
       "filters": {
         "questionTypes": ["multiple_choice"]
@@ -313,7 +336,7 @@ POST   /api/sa/impersonate         # User impersonation
 ## 🔒 Security Features
 
 - **Data Isolation**: Complete tenant separation in multi-tenant environment
-- **Authentication**: JWT-based with secure password hashing  
+- **Authentication**: JWT-based with secure password hashing
 - **Authorization**: Role-based access control (admin, user, superAdmin)
 - **Input Validation**: Zod schema validation on all API endpoints
 - **XSS Protection**: Sanitized HTML rendering and content security
@@ -327,7 +350,7 @@ Comprehensive documentation is available in the `/docs` directory:
 
 - **[📖 Documentation Index](./docs/README.md)** - Complete navigation
 - **[🔐 Admin Features](./docs/admin/)** - Administrative functionality
-- **[⚡ Platform Features](./docs/features/)** - Core platform capabilities  
+- **[⚡ Platform Features](./docs/features/)** - Core platform capabilities
 - **[🔧 Implementation](./docs/implementation/)** - Technical architecture
 - **[🧪 Testing](./docs/testing/)** - Test strategies and results
 - **[🚀 Deployment](./docs/deployment/)** - Production deployment guides
@@ -339,10 +362,11 @@ We welcome contributions to SigmaQ! Please see our contributing guidelines:
 1. **Fork** the repository
 2. **Create** feature branch (`git checkout -b feature/amazing-feature`)
 3. **Commit** changes (`git commit -m 'Add amazing feature'`)
-4. **Push** to branch (`git push origin feature/amazing-feature`)  
+4. **Push** to branch (`git push origin feature/amazing-feature`)
 5. **Open** pull request
 
 ### Development Standards
+
 - **TypeScript**: Maintain type safety across all components
 - **Testing**: Add tests for new features and bug fixes
 - **Documentation**: Update docs for any API or feature changes
@@ -357,4 +381,4 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 
 **SigmaQ** ([sigmaq.co](https://sigmaq.co)) - Empowering organizations with intelligent assessment solutions.
 
-*Proudly developed by [JR Academy](https://jracademy.ai) - Building the future of learning and assessment technology.*
+_Proudly developed by [JR Academy](https://jracademy.ai) - Building the future of learning and assessment technology._

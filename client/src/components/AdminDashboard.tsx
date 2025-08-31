@@ -55,10 +55,10 @@ const AdminDashboard: React.FC = () => {
 			const newUrl = new URL(window.location.href);
 			newUrl.searchParams.delete('preselectedBank');
 			newUrl.searchParams.delete('t'); // Remove timestamp parameter too
-			
+
 			// Use replace instead of replaceState to ensure URL is updated
 			window.history.replaceState({}, document.title, newUrl.pathname + newUrl.search);
-			
+
 			// Then open create survey modal with preselected question bank (Assessment type only)
 			setNewSurvey(prev => ({
 				...prev,
@@ -115,12 +115,12 @@ const AdminDashboard: React.FC = () => {
 			);
 		}
 
-               // Check if we're on a candidate detail route
-               if (location.pathname.includes('/candidate/') && params.responseId && params.surveyId) {
-                       return (
-                               <CandidateDetailView
-                                       responseId={params.responseId}
-                                       onBack={async () => {
+		// Check if we're on a candidate detail route
+		if (location.pathname.includes('/candidate/') && params.responseId && params.surveyId) {
+			return (
+				<CandidateDetailView
+					responseId={params.responseId}
+					onBack={async () => {
 						// Navigate back to survey statistics tab without page refresh
 						navigate(`/admin/survey/${params.surveyId}/statistics`, { replace: true });
 
@@ -142,17 +142,17 @@ const AdminDashboard: React.FC = () => {
 							setTab('detail');
 						}
 					}}
-                               />
-                       );
-               }
+				/>
+			);
+		}
 
-                // Question bank checkout and confirmation pages
-                if (location.pathname.startsWith('/checkout/success')) {
-                        return <QuestionBankConfirmationPage />;
-                }
-                if (location.pathname.startsWith('/checkout/bank/')) {
-                        return <QuestionBankCheckoutPage />;
-                }
+		// Question bank checkout and confirmation pages
+		if (location.pathname.startsWith('/checkout/success')) {
+			return <QuestionBankConfirmationPage />;
+		}
+		if (location.pathname.startsWith('/checkout/bank/')) {
+			return <QuestionBankCheckoutPage />;
+		}
 		if (location.pathname === '/checkout') {
 			return <CheckoutPage />;
 		}

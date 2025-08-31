@@ -29,7 +29,7 @@ function sendMail({ to, subject, html, text, language = 'en' }) {
 	if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
 		const errorMessages = {
 			en: 'Email configuration incomplete. Please configure EMAIL_USER and EMAIL_PASS in .env file',
-			zh: '邮件配置不完整，请在 .env 文件中配置 EMAIL_USER 和 EMAIL_PASS'
+			zh: '邮件配置不完整，请在 .env 文件中配置 EMAIL_USER 和 EMAIL_PASS',
 		};
 		const error = new Error(errorMessages[language] || errorMessages.en);
 		error.code = 'EMAIL_CONFIG_MISSING';
@@ -103,7 +103,7 @@ async function sendVerificationCode({ to, code, name, language = 'en' }) {
 	try {
 		// Clear template cache to ensure latest version
 		emailTemplateManager.clearCache();
-		
+
 		// Use template system
 		const html = await emailTemplateManager.renderTemplate('verification-code', {
 			subject: t.subject,
@@ -116,7 +116,7 @@ async function sendVerificationCode({ to, code, name, language = 'en' }) {
 			warningItems: t.warningItems,
 			disclaimer: t.disclaimer,
 			footerText: t.footerText,
-			footerLinks: t.footerLinks
+			footerLinks: t.footerLinks,
 		});
 
 		return sendMail({ to, subject: t.subject, html, text: t.textMessage, language });
@@ -135,7 +135,13 @@ async function sendVerificationCode({ to, code, name, language = 'en' }) {
 				<p>${t.disclaimer}</p>
 			</div>
 		`;
-		return sendMail({ to, subject: t.subject, html: fallbackHtml, text: t.textMessage, language });
+		return sendMail({
+			to,
+			subject: t.subject,
+			html: fallbackHtml,
+			text: t.textMessage,
+			language,
+		});
 	}
 }
 

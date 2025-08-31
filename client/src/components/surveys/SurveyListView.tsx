@@ -74,11 +74,23 @@ const SurveyListView: React.FC = () => {
 					<div className='bg-white rounded-xl shadow-sm p-8 text-center border border-gray-100'>
 						<div className='mb-6'>
 							<div className='w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4 border-2 border-blue-100'>
-								<svg className='w-10 h-10 text-blue-600' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
-									<path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' />
+								<svg
+									className='w-10 h-10 text-blue-600'
+									fill='none'
+									stroke='currentColor'
+									viewBox='0 0 24 24'
+								>
+									<path
+										strokeLinecap='round'
+										strokeLinejoin='round'
+										strokeWidth={2}
+										d='M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z'
+									/>
 								</svg>
 							</div>
-							<h2 className='text-3xl font-bold text-gray-900 mb-2'>Welcome to SigmaQ</h2>
+							<h2 className='text-3xl font-bold text-gray-900 mb-2'>
+								Welcome to SigmaQ
+							</h2>
 							<p className='text-lg text-gray-600'>
 								Create your first survey in just 3 simple steps
 							</p>
@@ -121,10 +133,10 @@ const SurveyListView: React.FC = () => {
 								</svg>
 							</div>
 							<h3 className='text-lg font-semibold text-gray-900 text-center mb-2'>
-							Create Survey
+								Create Survey
 							</h3>
 							<p className='text-sm text-gray-600 text-center'>
-							Build custom assessments with our intuitive editor
+								Build custom assessments with our intuitive editor
 							</p>
 						</div>
 
@@ -150,10 +162,10 @@ const SurveyListView: React.FC = () => {
 								</svg>
 							</div>
 							<h3 className='text-lg font-semibold text-gray-900 text-center mb-2'>
-							Connect Public Banks
+								Connect Public Banks
 							</h3>
 							<p className='text-sm text-gray-600 text-center'>
-							Access pre-built question libraries from our marketplace
+								Access pre-built question libraries from our marketplace
 							</p>
 						</div>
 
@@ -177,10 +189,10 @@ const SurveyListView: React.FC = () => {
 								</svg>
 							</div>
 							<h3 className='text-lg font-semibold text-gray-900 text-center mb-2'>
-							Import CSV
+								Import CSV
 							</h3>
 							<p className='text-sm text-gray-600 text-center'>
-							Upload existing questions from spreadsheets
+								Upload existing questions from spreadsheets
 							</p>
 						</div>
 
@@ -210,10 +222,10 @@ const SurveyListView: React.FC = () => {
 								</svg>
 							</div>
 							<h3 className='text-lg font-semibold text-gray-900 text-center mb-2'>
-							Explore Samples
+								Explore Samples
 							</h3>
 							<p className='text-sm text-gray-600 text-center'>
-							Browse example assessments to get inspired
+								Browse example assessments to get inspired
 							</p>
 						</div>
 					</div>
@@ -239,8 +251,18 @@ const SurveyListView: React.FC = () => {
 						onClick={() => setShowCreateWizard(true)}
 						className='bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium shadow-md hover:shadow-lg transition-all flex items-center gap-2'
 					>
-						<svg className='w-5 h-5' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
-							<path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M12 4v16m8-8H4' />
+						<svg
+							className='w-5 h-5'
+							fill='none'
+							stroke='currentColor'
+							viewBox='0 0 24 24'
+						>
+							<path
+								strokeLinecap='round'
+								strokeLinejoin='round'
+								strokeWidth={2}
+								d='M12 4v16m8-8H4'
+							/>
 						</svg>
 						Create Survey
 					</button>
@@ -281,11 +303,11 @@ const SurveyListView: React.FC = () => {
 							value={sortBy}
 							onChange={e =>
 								setSortBy(
-								e.target.value as
-									| 'createdAt_desc'
-									| 'createdAt_asc'
-									| 'title_asc'
-									| 'title_desc'
+									e.target.value as
+										| 'createdAt_desc'
+										| 'createdAt_asc'
+										| 'title_asc'
+										| 'title_desc'
 								)
 							}
 						>
@@ -300,7 +322,7 @@ const SurveyListView: React.FC = () => {
 				{/* List */}
 				{filtered.length === 0 ? (
 					<div className='text-center py-8 text-gray-500'>
-					No surveys match current filters.
+						No surveys match current filters.
 					</div>
 				) : (
 					filtered.map((survey, index) => (

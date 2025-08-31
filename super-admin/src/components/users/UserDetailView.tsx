@@ -76,7 +76,9 @@ const UserDetailView: React.FC<UserDetailViewProps> = ({ user, onBack, onUpdate 
 					surveyCount: Math.floor(Math.random() * 20) + 1,
 					responseCount: Math.floor(Math.random() * 100) + 10,
 					questionBankCount: Math.floor(Math.random() * 10) + 1,
-					lastActivity: new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000).toISOString(),
+					lastActivity: new Date(
+						Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000
+					).toISOString(),
 				});
 			}
 		} catch (error) {
@@ -85,7 +87,9 @@ const UserDetailView: React.FC<UserDetailViewProps> = ({ user, onBack, onUpdate 
 				surveyCount: Math.floor(Math.random() * 15) + 2,
 				responseCount: Math.floor(Math.random() * 80) + 20,
 				questionBankCount: Math.floor(Math.random() * 8) + 2,
-				lastActivity: new Date(Date.now() - Math.random() * 5 * 24 * 60 * 60 * 1000).toISOString(),
+				lastActivity: new Date(
+					Date.now() - Math.random() * 5 * 24 * 60 * 60 * 1000
+				).toISOString(),
 			});
 		} finally {
 			setStatsLoading(false);
@@ -169,19 +173,25 @@ const UserDetailView: React.FC<UserDetailViewProps> = ({ user, onBack, onUpdate 
 			if (response.ok) {
 				const data = await response.json();
 				if (data.success) {
-					setSuccessMessage(`Password reset successfully for ${user.name}. New temporary password has been sent to ${user.email}`);
+					setSuccessMessage(
+						`Password reset successfully for ${user.name}. New temporary password has been sent to ${user.email}`
+					);
 					setTimeout(() => setSuccessMessage(null), 5000);
 				} else {
 					setError(data.error || 'Failed to reset password');
 					setTimeout(() => setError(null), 3000);
 				}
 			} else {
-				setSuccessMessage(`Password reset initiated for ${user.name}. A temporary password will be sent to ${user.email} (API not yet implemented)`);
+				setSuccessMessage(
+					`Password reset initiated for ${user.name}. A temporary password will be sent to ${user.email} (API not yet implemented)`
+				);
 				setTimeout(() => setSuccessMessage(null), 5000);
 			}
 		} catch (error) {
 			console.error('Error resetting password:', error);
-			setSuccessMessage(`Password reset initiated for ${user.name}. A temporary password will be sent to ${user.email} (API not available)`);
+			setSuccessMessage(
+				`Password reset initiated for ${user.name}. A temporary password will be sent to ${user.email} (API not available)`
+			);
 			setTimeout(() => setSuccessMessage(null), 5000);
 		} finally {
 			setResetPasswordLoading(false);
@@ -191,7 +201,7 @@ const UserDetailView: React.FC<UserDetailViewProps> = ({ user, onBack, onUpdate 
 	const handleToggleStatus = async () => {
 		const newStatus = !user.isActive;
 		const action = newStatus ? 'activate' : 'deactivate';
-		
+
 		if (!confirm(`Are you sure you want to ${action} ${user.name} (${user.email})?`)) {
 			return;
 		}
@@ -223,7 +233,9 @@ const UserDetailView: React.FC<UserDetailViewProps> = ({ user, onBack, onUpdate 
 				const updatedUser = { ...user, isActive: newStatus };
 				onUpdate(updatedUser);
 				setFormData(updatedUser);
-				setSuccessMessage(`User ${user.name} has been ${action}d successfully (API not yet implemented)`);
+				setSuccessMessage(
+					`User ${user.name} has been ${action}d successfully (API not yet implemented)`
+				);
 				setTimeout(() => setSuccessMessage(null), 3000);
 			}
 		} catch (error) {
@@ -231,7 +243,9 @@ const UserDetailView: React.FC<UserDetailViewProps> = ({ user, onBack, onUpdate 
 			const updatedUser = { ...user, isActive: newStatus };
 			onUpdate(updatedUser);
 			setFormData(updatedUser);
-			setSuccessMessage(`User ${user.name} has been ${action}d successfully (API not available)`);
+			setSuccessMessage(
+				`User ${user.name} has been ${action}d successfully (API not available)`
+			);
 			setTimeout(() => setSuccessMessage(null), 3000);
 		}
 	};
@@ -433,7 +447,9 @@ const UserDetailView: React.FC<UserDetailViewProps> = ({ user, onBack, onUpdate 
 									className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
 								/>
 							) : (
-								<p className="text-gray-900">{user.department || 'Not specified'}</p>
+								<p className="text-gray-900">
+									{user.department || 'Not specified'}
+								</p>
 							)}
 						</div>
 
@@ -510,7 +526,9 @@ const UserDetailView: React.FC<UserDetailViewProps> = ({ user, onBack, onUpdate 
 							{user.companyId ? (
 								<div className="text-gray-900">
 									<div className="font-medium">{user.companyId.name}</div>
-									<div className="text-sm text-gray-500">ID: {user.companyId._id}</div>
+									<div className="text-sm text-gray-500">
+										ID: {user.companyId._id}
+									</div>
 									{user.companyId.slug && (
 										<div className="text-sm text-gray-500 font-mono">
 											Slug: {user.companyId.slug}
@@ -579,7 +597,10 @@ const UserDetailView: React.FC<UserDetailViewProps> = ({ user, onBack, onUpdate 
 									)}
 									{user.subscriptionCurrentPeriodEnd && (
 										<div className="text-sm text-gray-600">
-											Expires: {new Date(user.subscriptionCurrentPeriodEnd).toLocaleDateString()}
+											Expires:{' '}
+											{new Date(
+												user.subscriptionCurrentPeriodEnd
+											).toLocaleDateString()}
 										</div>
 									)}
 								</div>
@@ -627,7 +648,9 @@ const UserDetailView: React.FC<UserDetailViewProps> = ({ user, onBack, onUpdate 
 									</svg>
 								</div>
 								<div className="ml-3">
-									<p className="text-sm font-medium text-blue-600">Surveys Created</p>
+									<p className="text-sm font-medium text-blue-600">
+										Surveys Created
+									</p>
 									<p className="text-2xl font-semibold text-blue-900">
 										{stats.surveyCount}
 									</p>
@@ -679,7 +702,9 @@ const UserDetailView: React.FC<UserDetailViewProps> = ({ user, onBack, onUpdate 
 									</svg>
 								</div>
 								<div className="ml-3">
-									<p className="text-sm font-medium text-purple-600">Question Banks</p>
+									<p className="text-sm font-medium text-purple-600">
+										Question Banks
+									</p>
 									<p className="text-2xl font-semibold text-purple-900">
 										{stats.questionBankCount}
 									</p>
@@ -705,7 +730,9 @@ const UserDetailView: React.FC<UserDetailViewProps> = ({ user, onBack, onUpdate 
 									</svg>
 								</div>
 								<div className="ml-3">
-									<p className="text-sm font-medium text-yellow-600">Last Activity</p>
+									<p className="text-sm font-medium text-yellow-600">
+										Last Activity
+									</p>
 									<p className="text-sm font-semibold text-yellow-900">
 										{new Date(stats.lastActivity).toLocaleDateString()}
 									</p>
@@ -717,7 +744,8 @@ const UserDetailView: React.FC<UserDetailViewProps> = ({ user, onBack, onUpdate 
 					<div className="text-center py-8 text-gray-500">
 						<p className="text-gray-600 mb-2">Statistics not available</p>
 						<p className="text-sm text-gray-500">
-							User activity statistics will be displayed when the backend API is implemented
+							User activity statistics will be displayed when the backend API is
+							implemented
 						</p>
 					</div>
 				)}

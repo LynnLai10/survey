@@ -178,15 +178,15 @@ const TakeAssessment: React.FC = () => {
 		if (slug) {
 			setLoading(true);
 			const apiUrl = getApiPath(`/assessment/${slug}`);
-			
-			
+
 			axios
 				.get<Survey>(apiUrl)
 				.then(res => {
-					
 					// Verify it's an assessment type
 					if (res.data.type !== 'assessment') {
-						setError('This is not an assessment. Please use the survey interface instead.');
+						setError(
+							'This is not an assessment. Please use the survey interface instead.'
+						);
 						return;
 					}
 					setSurvey(res.data);
@@ -202,7 +202,7 @@ const TakeAssessment: React.FC = () => {
 
 					// Do not pre-load any questions for assessments
 				})
-				.catch((error) => {
+				.catch(error => {
 					console.error('Assessment API Error:', error);
 					setError('Assessment not found');
 				})
@@ -443,7 +443,7 @@ const TakeAssessment: React.FC = () => {
 
 	if (error) {
 		return (
-			<div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center px-4">
+			<div className='min-h-screen bg-gray-50 flex flex-col items-center justify-center px-4'>
 				<ErrorCard message={error} onHome={() => navigate('/')} />
 			</div>
 		);

@@ -134,9 +134,7 @@ const Users: React.FC = () => {
 	};
 
 	const handleUpdateUser = (updatedUser: User) => {
-		setUsers(prev =>
-			prev.map(user => (user._id === updatedUser._id ? updatedUser : user))
-		);
+		setUsers(prev => prev.map(user => (user._id === updatedUser._id ? updatedUser : user)));
 		setSelectedUser(updatedUser);
 	};
 
@@ -147,8 +145,10 @@ const Users: React.FC = () => {
 	const filteredUsers = users.filter(user => {
 		if (searchTerm) {
 			const search = searchTerm.toLowerCase();
-			if (!user.name.toLowerCase().includes(search) && 
-				!user.email.toLowerCase().includes(search)) {
+			if (
+				!user.name.toLowerCase().includes(search) &&
+				!user.email.toLowerCase().includes(search)
+			) {
 				return false;
 			}
 		}
@@ -181,9 +181,7 @@ const Users: React.FC = () => {
 			<div className="bg-white rounded-lg shadow p-6">
 				<div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
 					<div>
-						<h2 className="text-xl font-semibold text-gray-900">
-							User Management
-						</h2>
+						<h2 className="text-xl font-semibold text-gray-900">User Management</h2>
 						<p className="text-sm text-gray-600 mt-1">
 							Manage all registered users across all companies
 						</p>
@@ -385,9 +383,14 @@ const Users: React.FC = () => {
 						<div className="ml-4">
 							<p className="text-sm font-medium text-gray-600">Recent Logins</p>
 							<p className="text-2xl font-semibold text-gray-900">
-								{users.filter(u => u.lastLoginAt && 
-									new Date(u.lastLoginAt) > new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
-								).length}
+								{
+									users.filter(
+										u =>
+											u.lastLoginAt &&
+											new Date(u.lastLoginAt) >
+												new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
+									).length
+								}
 							</p>
 						</div>
 					</div>
@@ -415,9 +418,7 @@ const Users: React.FC = () => {
 								d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5 0a4 4 0 11-8 0 4 4 0 018 0z"
 							></path>
 						</svg>
-						<h3 className="mt-2 text-sm font-medium text-gray-900">
-							No users found
-						</h3>
+						<h3 className="mt-2 text-sm font-medium text-gray-900">No users found</h3>
 						<p className="mt-1 text-sm text-gray-500">
 							{searchTerm || roleFilter || statusFilter
 								? 'No users match your filters.'
@@ -488,7 +489,9 @@ const Users: React.FC = () => {
 													{user.companyId.name}
 												</div>
 											) : (
-												<span className="text-sm text-gray-400">No company</span>
+												<span className="text-sm text-gray-400">
+													No company
+												</span>
 											)}
 										</td>
 										<td className="px-6 py-4 whitespace-nowrap">
@@ -534,7 +537,9 @@ const Users: React.FC = () => {
 										</td>
 										<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
 											<div className="flex flex-col">
-												<span>{new Date(user.createdAt).toLocaleDateString()}</span>
+												<span>
+													{new Date(user.createdAt).toLocaleDateString()}
+												</span>
 												<span className="text-xs text-gray-400">
 													{new Date(user.createdAt).toLocaleTimeString()}
 												</span>
@@ -543,9 +548,15 @@ const Users: React.FC = () => {
 										<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
 											{user.lastLoginAt ? (
 												<div className="flex flex-col">
-													<span>{new Date(user.lastLoginAt).toLocaleDateString()}</span>
+													<span>
+														{new Date(
+															user.lastLoginAt
+														).toLocaleDateString()}
+													</span>
 													<span className="text-xs text-gray-400">
-														{new Date(user.lastLoginAt).toLocaleTimeString()}
+														{new Date(
+															user.lastLoginAt
+														).toLocaleTimeString()}
 													</span>
 												</div>
 											) : (
@@ -595,10 +606,13 @@ const Users: React.FC = () => {
 									</span>{' '}
 									to{' '}
 									<span className="font-medium">
-										{Math.min(pagination.page * pagination.limit, pagination.total)}
+										{Math.min(
+											pagination.page * pagination.limit,
+											pagination.total
+										)}
 									</span>{' '}
-									of{' '}
-									<span className="font-medium">{pagination.total}</span> results
+									of <span className="font-medium">{pagination.total}</span>{' '}
+									results
 								</p>
 							</div>
 							<div>
@@ -610,22 +624,25 @@ const Users: React.FC = () => {
 									>
 										Previous
 									</button>
-									{Array.from({ length: Math.min(5, pagination.pages) }, (_, i) => {
-										const page = i + 1;
-										return (
-											<button
-												key={page}
-												onClick={() => handlePageChange(page)}
-												className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium ${
-													page === pagination.page
-														? 'z-10 bg-blue-50 border-blue-500 text-blue-600'
-														: 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'
-												}`}
-											>
-												{page}
-											</button>
-										);
-									})}
+									{Array.from(
+										{ length: Math.min(5, pagination.pages) },
+										(_, i) => {
+											const page = i + 1;
+											return (
+												<button
+													key={page}
+													onClick={() => handlePageChange(page)}
+													className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium ${
+														page === pagination.page
+															? 'z-10 bg-blue-50 border-blue-500 text-blue-600'
+															: 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'
+													}`}
+												>
+													{page}
+												</button>
+											);
+										}
+									)}
 									<button
 										onClick={() => handlePageChange(pagination.page + 1)}
 										disabled={pagination.page === pagination.pages}

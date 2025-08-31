@@ -106,7 +106,7 @@ app.get('/api/health', (req, res) => {
 		environment: process.env.NODE_ENV || 'development',
 		version: require('./package.json').version,
 	};
-	
+
 	// Basic database connectivity check
 	if (mongoose.connection.readyState === 1) {
 		healthCheck.database = 'connected';
@@ -114,7 +114,7 @@ app.get('/api/health', (req, res) => {
 		healthCheck.database = 'disconnected';
 		return res.status(503).json(healthCheck);
 	}
-	
+
 	res.status(200).json(healthCheck);
 });
 

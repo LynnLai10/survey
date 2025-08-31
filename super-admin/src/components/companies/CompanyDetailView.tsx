@@ -65,22 +65,32 @@ const CompanyDetailView: React.FC<CompanyDetailViewProps> = ({ company, onBack, 
 	const [showUserModal, setShowUserModal] = useState(false);
 	const [resetPasswordLoading, setResetPasswordLoading] = useState<string | null>(null);
 	// Company assets
-	const [companyBanks, setCompanyBanks] = useState<Array<{ _id: string; name: string; description?: string; questionCount: number; createdAt: string }>>([]);
+	const [companyBanks, setCompanyBanks] = useState<
+		Array<{
+			_id: string;
+			name: string;
+			description?: string;
+			questionCount: number;
+			createdAt: string;
+		}>
+	>([]);
 	const [companyBanksLoading, setCompanyBanksLoading] = useState(true);
-	const [companySurveys, setCompanySurveys] = useState<Array<{
-		_id: string;
-		title: string;
-		type: string;
-		status: string;
-		createdAt: string;
-		questionCount: number;
-		description?: string;
-		timeLimit?: number;
-		maxAttempts?: number;
-		instructions?: string;
-		navigationMode?: string;
-		updatedAt: string;
-	}>>([]);
+	const [companySurveys, setCompanySurveys] = useState<
+		Array<{
+			_id: string;
+			title: string;
+			type: string;
+			status: string;
+			createdAt: string;
+			questionCount: number;
+			description?: string;
+			timeLimit?: number;
+			maxAttempts?: number;
+			instructions?: string;
+			navigationMode?: string;
+			updatedAt: string;
+		}>
+	>([]);
 	const [companySurveysLoading, setCompanySurveysLoading] = useState(true);
 	const [selectedSurvey, setSelectedSurvey] = useState<any>(null);
 	const [showSurveyModal, setShowSurveyModal] = useState(false);
@@ -253,7 +263,7 @@ const CompanyDetailView: React.FC<CompanyDetailViewProps> = ({ company, onBack, 
 	const handleSurveyUpdate = (updatedSurvey: any) => {
 		// Update the survey in the local state
 		setCompanySurveys(prev =>
-			prev.map(s => s._id === updatedSurvey._id ? { ...s, ...updatedSurvey } : s)
+			prev.map(s => (s._id === updatedSurvey._id ? { ...s, ...updatedSurvey } : s))
 		);
 	};
 
@@ -474,7 +484,9 @@ const CompanyDetailView: React.FC<CompanyDetailViewProps> = ({ company, onBack, 
 			if (response.ok) {
 				const data = await response.json();
 				if (data.success) {
-					setSuccessMessage(`Password reset successfully for ${user.name}. New temporary password has been sent to ${user.email}`);
+					setSuccessMessage(
+						`Password reset successfully for ${user.name}. New temporary password has been sent to ${user.email}`
+					);
 					setTimeout(() => setSuccessMessage(null), 5000);
 				} else {
 					setError(data.error || 'Failed to reset password');
@@ -482,12 +494,16 @@ const CompanyDetailView: React.FC<CompanyDetailViewProps> = ({ company, onBack, 
 				}
 			} else {
 				// API endpoint not implemented, show mock success
-				setSuccessMessage(`Password reset initiated for ${user.name}. A temporary password will be sent to ${user.email} (API not yet implemented)`);
+				setSuccessMessage(
+					`Password reset initiated for ${user.name}. A temporary password will be sent to ${user.email} (API not yet implemented)`
+				);
 				setTimeout(() => setSuccessMessage(null), 5000);
 			}
 		} catch (error) {
 			console.error('Error resetting password:', error);
-			setSuccessMessage(`Password reset initiated for ${user.name}. A temporary password will be sent to ${user.email} (API not available)`);
+			setSuccessMessage(
+				`Password reset initiated for ${user.name}. A temporary password will be sent to ${user.email} (API not available)`
+			);
 			setTimeout(() => setSuccessMessage(null), 5000);
 		} finally {
 			setResetPasswordLoading(null);
@@ -517,11 +533,9 @@ const CompanyDetailView: React.FC<CompanyDetailViewProps> = ({ company, onBack, 
 				const data = await response.json();
 				if (data.success) {
 					// Update user in local state
-					setUsers(prev => prev.map(u =>
-						u._id === user._id
-							? { ...u, status: newStatus }
-							: u
-					));
+					setUsers(prev =>
+						prev.map(u => (u._id === user._id ? { ...u, status: newStatus } : u))
+					);
 					setSuccessMessage(`User ${user.name} has been ${action}d successfully`);
 					setTimeout(() => setSuccessMessage(null), 3000);
 				} else {
@@ -530,23 +544,21 @@ const CompanyDetailView: React.FC<CompanyDetailViewProps> = ({ company, onBack, 
 				}
 			} else {
 				// API endpoint not implemented, update locally
-				setUsers(prev => prev.map(u =>
-					u._id === user._id
-						? { ...u, status: newStatus }
-						: u
-				));
-				setSuccessMessage(`User ${user.name} has been ${action}d successfully (API not yet implemented)`);
+				setUsers(prev =>
+					prev.map(u => (u._id === user._id ? { ...u, status: newStatus } : u))
+				);
+				setSuccessMessage(
+					`User ${user.name} has been ${action}d successfully (API not yet implemented)`
+				);
 				setTimeout(() => setSuccessMessage(null), 3000);
 			}
 		} catch (error) {
 			console.error(`Error ${action}ing user:`, error);
 			// Update locally when API is not available
-			setUsers(prev => prev.map(u =>
-				u._id === user._id
-					? { ...u, status: newStatus }
-					: u
-			));
-			setSuccessMessage(`User ${user.name} has been ${action}d successfully (API not available)`);
+			setUsers(prev => prev.map(u => (u._id === user._id ? { ...u, status: newStatus } : u)));
+			setSuccessMessage(
+				`User ${user.name} has been ${action}d successfully (API not available)`
+			);
 			setTimeout(() => setSuccessMessage(null), 3000);
 		}
 	};
@@ -1304,7 +1316,9 @@ const CompanyDetailView: React.FC<CompanyDetailViewProps> = ({ company, onBack, 
 										</td>
 										<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
 											<div className="flex flex-col">
-												<span>{new Date(user.createdAt).toLocaleDateString()}</span>
+												<span>
+													{new Date(user.createdAt).toLocaleDateString()}
+												</span>
 												<span className="text-xs text-gray-400">
 													{new Date(user.createdAt).toLocaleTimeString()}
 												</span>
@@ -1313,13 +1327,21 @@ const CompanyDetailView: React.FC<CompanyDetailViewProps> = ({ company, onBack, 
 										<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
 											{user.lastLogin ? (
 												<div className="flex flex-col">
-													<span>{new Date(user.lastLogin).toLocaleDateString()}</span>
+													<span>
+														{new Date(
+															user.lastLogin
+														).toLocaleDateString()}
+													</span>
 													<span className="text-xs text-gray-400">
-														{new Date(user.lastLogin).toLocaleTimeString()}
+														{new Date(
+															user.lastLogin
+														).toLocaleTimeString()}
 													</span>
 												</div>
 											) : (
-												<span className="text-gray-400">Never logged in</span>
+												<span className="text-gray-400">
+													Never logged in
+												</span>
 											)}
 										</td>
 										<td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
@@ -1346,9 +1368,15 @@ const CompanyDetailView: React.FC<CompanyDetailViewProps> = ({ company, onBack, 
 															? 'text-white bg-orange-600 hover:bg-orange-700 focus:ring-orange-500'
 															: 'text-white bg-green-600 hover:bg-green-700 focus:ring-green-500'
 													}`}
-													title={user.status === 'active' ? 'Deactivate User' : 'Activate User'}
+													title={
+														user.status === 'active'
+															? 'Deactivate User'
+															: 'Activate User'
+													}
 												>
-													{user.status === 'active' ? '⏸️ Deactivate' : '▶️ Activate'}
+													{user.status === 'active'
+														? '⏸️ Deactivate'
+														: '▶️ Activate'}
 												</button>
 												<button
 													onClick={() => handleViewUserDetails(user)}
@@ -1409,20 +1437,34 @@ const CompanyDetailView: React.FC<CompanyDetailViewProps> = ({ company, onBack, 
 						<table className="min-w-full divide-y divide-gray-200">
 							<thead className="bg-gray-50">
 								<tr>
-									<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-									<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Questions</th>
-									<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created</th>
+									<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+										Name
+									</th>
+									<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+										Questions
+									</th>
+									<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+										Created
+									</th>
 								</tr>
 							</thead>
 							<tbody className="bg-white divide-y divide-gray-200">
 								{companyBanks.map(b => (
 									<tr key={b._id}>
 										<td className="px-6 py-4 whitespace-nowrap">
-											<div className="text-sm font-medium text-gray-900">{b.name}</div>
-											<div className="text-sm text-gray-500">{b.description || 'No description'}</div>
+											<div className="text-sm font-medium text-gray-900">
+												{b.name}
+											</div>
+											<div className="text-sm text-gray-500">
+												{b.description || 'No description'}
+											</div>
 										</td>
-										<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{b.questionCount}</td>
-										<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{new Date(b.createdAt).toLocaleDateString()}</td>
+										<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+											{b.questionCount}
+										</td>
+										<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+											{new Date(b.createdAt).toLocaleDateString()}
+										</td>
 									</tr>
 								))}
 							</tbody>
@@ -1455,11 +1497,21 @@ const CompanyDetailView: React.FC<CompanyDetailViewProps> = ({ company, onBack, 
 						<table className="min-w-full divide-y divide-gray-200">
 							<thead className="bg-gray-50">
 								<tr>
-									<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
-									<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
-									<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Questions</th>
-									<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-									<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created</th>
+									<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+										Title
+									</th>
+									<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+										Type
+									</th>
+									<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+										Questions
+									</th>
+									<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+										Status
+									</th>
+									<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+										Created
+									</th>
 								</tr>
 							</thead>
 							<tbody className="bg-white divide-y divide-gray-200">
@@ -1470,18 +1522,28 @@ const CompanyDetailView: React.FC<CompanyDetailViewProps> = ({ company, onBack, 
 										className="cursor-pointer hover:bg-gray-50 transition-colors duration-150"
 									>
 										<td className="px-6 py-4 whitespace-nowrap">
-											<div className="text-sm font-medium text-gray-900">{s.title || s._id}</div>
+											<div className="text-sm font-medium text-gray-900">
+												{s.title || s._id}
+											</div>
 										</td>
-										<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 capitalize">{s.type || 'survey'}</td>
+										<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 capitalize">
+											{s.type || 'survey'}
+										</td>
 										<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
 											<span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
 												📝 {s.questionCount || 0} questions
 											</span>
 										</td>
 										<td className="px-6 py-4 whitespace-nowrap">
-											<span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${s.status === 'active' ? 'bg-green-100 text-green-800' : s.status === 'closed' ? 'bg-gray-100 text-gray-800' : 'bg-yellow-100 text-yellow-800'}`}>{s.status}</span>
+											<span
+												className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${s.status === 'active' ? 'bg-green-100 text-green-800' : s.status === 'closed' ? 'bg-gray-100 text-gray-800' : 'bg-yellow-100 text-yellow-800'}`}
+											>
+												{s.status}
+											</span>
 										</td>
-										<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{new Date(s.createdAt).toLocaleDateString()}</td>
+										<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+											{new Date(s.createdAt).toLocaleDateString()}
+										</td>
 									</tr>
 								))}
 							</tbody>
@@ -1519,8 +1581,18 @@ const CompanyDetailView: React.FC<CompanyDetailViewProps> = ({ company, onBack, 
 								onClick={() => setShowUserModal(false)}
 								className="text-gray-400 hover:text-gray-600"
 							>
-								<svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-									<path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
+								<svg
+									className="w-6 h-6"
+									fill="none"
+									stroke="currentColor"
+									viewBox="0 0 24 24"
+								>
+									<path
+										strokeLinecap="round"
+										strokeLinejoin="round"
+										strokeWidth="2"
+										d="M6 18L18 6M6 6l12 12"
+									></path>
 								</svg>
 							</button>
 						</div>
@@ -1535,36 +1607,64 @@ const CompanyDetailView: React.FC<CompanyDetailViewProps> = ({ company, onBack, 
 									</div>
 								</div>
 								<div>
-									<h4 className="text-xl font-semibold text-gray-900">{selectedUser.name}</h4>
+									<h4 className="text-xl font-semibold text-gray-900">
+										{selectedUser.name}
+									</h4>
 									<p className="text-gray-600">{selectedUser.email}</p>
-									<span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-										selectedUser.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-									}`}>
-										{selectedUser.status === 'active' ? '✅ Active' : '❌ Inactive'}
+									<span
+										className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+											selectedUser.status === 'active'
+												? 'bg-green-100 text-green-800'
+												: 'bg-red-100 text-red-800'
+										}`}
+									>
+										{selectedUser.status === 'active'
+											? '✅ Active'
+											: '❌ Inactive'}
 									</span>
 								</div>
 							</div>
 
 							<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 								<div className="bg-gray-50 p-4 rounded-lg">
-									<h5 className="font-medium text-gray-900 mb-2">Account Information</h5>
+									<h5 className="font-medium text-gray-900 mb-2">
+										Account Information
+									</h5>
 									<div className="space-y-2 text-sm">
-										<div><span className="font-medium">User ID:</span> {selectedUser._id}</div>
-										<div><span className="font-medium">Role:</span> {selectedUser.role}</div>
-										<div><span className="font-medium">Department:</span> {selectedUser.department || 'Not specified'}</div>
-										<div><span className="font-medium">Student ID:</span> {selectedUser.studentId || 'Not specified'}</div>
+										<div>
+											<span className="font-medium">User ID:</span>{' '}
+											{selectedUser._id}
+										</div>
+										<div>
+											<span className="font-medium">Role:</span>{' '}
+											{selectedUser.role}
+										</div>
+										<div>
+											<span className="font-medium">Department:</span>{' '}
+											{selectedUser.department || 'Not specified'}
+										</div>
+										<div>
+											<span className="font-medium">Student ID:</span>{' '}
+											{selectedUser.studentId || 'Not specified'}
+										</div>
 									</div>
 								</div>
 
 								<div className="bg-gray-50 p-4 rounded-lg">
-									<h5 className="font-medium text-gray-900 mb-2">Activity Information</h5>
+									<h5 className="font-medium text-gray-900 mb-2">
+										Activity Information
+									</h5>
 									<div className="space-y-2 text-sm">
 										<div>
 											<span className="font-medium">Registration Date:</span>
 											<div className="text-gray-600">
-												{new Date(selectedUser.createdAt).toLocaleDateString()}
+												{new Date(
+													selectedUser.createdAt
+												).toLocaleDateString()}
 												<br />
-												{new Date(selectedUser.createdAt).toLocaleTimeString()}
+												{new Date(
+													selectedUser.createdAt
+												).toLocaleTimeString()}
 											</div>
 										</div>
 										<div>
@@ -1572,9 +1672,13 @@ const CompanyDetailView: React.FC<CompanyDetailViewProps> = ({ company, onBack, 
 											<div className="text-gray-600">
 												{selectedUser.lastLogin ? (
 													<>
-														{new Date(selectedUser.lastLogin).toLocaleDateString()}
+														{new Date(
+															selectedUser.lastLogin
+														).toLocaleDateString()}
 														<br />
-														{new Date(selectedUser.lastLogin).toLocaleTimeString()}
+														{new Date(
+															selectedUser.lastLogin
+														).toLocaleTimeString()}
 													</>
 												) : (
 													'Never logged in'
@@ -1600,7 +1704,9 @@ const CompanyDetailView: React.FC<CompanyDetailViewProps> = ({ company, onBack, 
 									disabled={resetPasswordLoading === selectedUser._id}
 									className="px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md hover:bg-red-700 disabled:opacity-50"
 								>
-									{resetPasswordLoading === selectedUser._id ? 'Resetting...' : '🔑 Reset Password'}
+									{resetPasswordLoading === selectedUser._id
+										? 'Resetting...'
+										: '🔑 Reset Password'}
 								</button>
 								<button
 									onClick={() => {
@@ -1613,7 +1719,9 @@ const CompanyDetailView: React.FC<CompanyDetailViewProps> = ({ company, onBack, 
 											: 'bg-green-600 hover:bg-green-700'
 									}`}
 								>
-									{selectedUser.status === 'active' ? '⏸️ Deactivate' : '▶️ Activate'}
+									{selectedUser.status === 'active'
+										? '⏸️ Deactivate'
+										: '▶️ Activate'}
 								</button>
 							</div>
 						</div>
