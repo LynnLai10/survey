@@ -178,15 +178,32 @@ function Layout({ children }: { children: React.ReactNode }) {
 							className="lg:hidden mr-3 p-1 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
 							aria-label="Toggle menu"
 						>
-							<svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							<svg
+								className="h-6 w-6"
+								fill="none"
+								viewBox="0 0 24 24"
+								stroke="currentColor"
+							>
 								{isMobileMenuOpen ? (
-									<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+									<path
+										strokeLinecap="round"
+										strokeLinejoin="round"
+										strokeWidth={2}
+										d="M6 18L18 6M6 6l12 12"
+									/>
 								) : (
-									<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+									<path
+										strokeLinecap="round"
+										strokeLinejoin="round"
+										strokeWidth={2}
+										d="M4 6h16M4 12h16M4 18h16"
+									/>
 								)}
 							</svg>
 						</button>
-						<h1 className="text-xl sm:text-2xl font-bold text-gray-900">Super Admin Dashboard</h1>
+						<h1 className="text-xl sm:text-2xl font-bold text-gray-900">
+							Super Admin Dashboard
+						</h1>
 					</div>
 					<div className="flex items-center space-x-2 sm:space-x-4">
 						<span className="text-xs sm:text-sm text-gray-600 hidden sm:block">
@@ -238,7 +255,11 @@ function Layout({ children }: { children: React.ReactNode }) {
 					{/* Desktop Sidebar Footer */}
 					<div className="p-4 border-t border-gray-200 bg-gray-50">
 						<div className="text-center">
-							<img src="/super-admin/SigmaQ-logo.svg" alt="SigmaQ" className="h-6 mx-auto mb-2" />
+							<img
+								src="/super-admin/SigmaQ-logo.svg"
+								alt="SigmaQ"
+								className="h-6 mx-auto mb-2"
+							/>
 							<p className="text-xs text-gray-500 mb-1">Powered by</p>
 							<a
 								href="https://jracademy.ai"
@@ -253,9 +274,11 @@ function Layout({ children }: { children: React.ReactNode }) {
 				</nav>
 
 				{/* Mobile Sidebar */}
-				<nav className={`fixed left-0 top-16 w-64 bg-white shadow-sm h-[calc(100vh-4rem)] overflow-y-auto z-50 flex flex-col transition-transform duration-300 ease-in-out lg:hidden ${
-					isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
-				}`}>
+				<nav
+					className={`fixed left-0 top-16 w-64 bg-white shadow-sm h-[calc(100vh-4rem)] overflow-y-auto z-50 flex flex-col transition-transform duration-300 ease-in-out lg:hidden ${
+						isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
+					}`}
+				>
 					<div className="p-4 flex-1">
 						<ul className="space-y-2">
 							{navigation.map(item => {
@@ -280,7 +303,11 @@ function Layout({ children }: { children: React.ReactNode }) {
 					{/* Mobile Sidebar Footer */}
 					<div className="p-4 border-t border-gray-200 bg-gray-50">
 						<div className="text-center">
-							<img src="/super-admin/SigmaQ-logo.svg" alt="SigmaQ" className="h-6 mx-auto mb-2" />
+							<img
+								src="/super-admin/SigmaQ-logo.svg"
+								alt="SigmaQ"
+								className="h-6 mx-auto mb-2"
+							/>
 							<p className="text-xs text-gray-500 mb-1">Powered by</p>
 							<a
 								href="https://jracademy.ai"

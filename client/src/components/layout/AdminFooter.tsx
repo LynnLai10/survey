@@ -12,9 +12,9 @@ const AdminFooter: React.FC = () => {
 						<span>© {currentYear} SigmaQ. All rights reserved.</span>
 						<span className='text-xs text-gray-500'>
 							by{' '}
-							<a 
-								href='https://jracademy.ai' 
-								target='_blank' 
+							<a
+								href='https://jracademy.ai'
+								target='_blank'
 								rel='noopener noreferrer'
 								className='text-blue-600 hover:text-blue-700 font-medium'
 							>
@@ -22,24 +22,15 @@ const AdminFooter: React.FC = () => {
 							</a>
 						</span>
 					</div>
-					
+
 					<div className='flex items-center space-x-6 mt-4 md:mt-0'>
-						<a 
-							href='/help' 
-							className='hover:text-gray-800 transition-colors'
-						>
+						<a href='/help' className='hover:text-gray-800 transition-colors'>
 							Help Center
 						</a>
-						<a 
-							href='/privacy' 
-							className='hover:text-gray-800 transition-colors'
-						>
+						<a href='/privacy' className='hover:text-gray-800 transition-colors'>
 							Privacy
 						</a>
-						<a 
-							href='/terms' 
-							className='hover:text-gray-800 transition-colors'
-						>
+						<a href='/terms' className='hover:text-gray-800 transition-colors'>
 							Terms
 						</a>
 					</div>

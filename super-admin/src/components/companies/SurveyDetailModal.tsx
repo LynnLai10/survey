@@ -143,12 +143,19 @@ const SurveyDetailModal: React.FC<SurveyDetailModalProps> = ({
 								Edit
 							</button>
 						)}
-						<button
-							onClick={onClose}
-							className="text-gray-400 hover:text-gray-600"
-						>
-							<svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-								<path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
+						<button onClick={onClose} className="text-gray-400 hover:text-gray-600">
+							<svg
+								className="w-6 h-6"
+								fill="none"
+								stroke="currentColor"
+								viewBox="0 0 24 24"
+							>
+								<path
+									strokeLinecap="round"
+									strokeLinejoin="round"
+									strokeWidth="2"
+									d="M6 18L18 6M6 6l12 12"
+								></path>
 							</svg>
 						</button>
 					</div>
@@ -223,11 +230,15 @@ const SurveyDetailModal: React.FC<SurveyDetailModalProps> = ({
 									<option value="closed">Closed</option>
 								</select>
 							) : (
-								<span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-									survey.status === 'active' ? 'bg-green-100 text-green-800' :
-									survey.status === 'closed' ? 'bg-gray-100 text-gray-800' :
-									'bg-yellow-100 text-yellow-800'
-								}`}>
+								<span
+									className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+										survey.status === 'active'
+											? 'bg-green-100 text-green-800'
+											: survey.status === 'closed'
+												? 'bg-gray-100 text-gray-800'
+												: 'bg-yellow-100 text-yellow-800'
+									}`}
+								>
 									{survey.status}
 								</span>
 							)}
@@ -283,10 +294,14 @@ const SurveyDetailModal: React.FC<SurveyDetailModalProps> = ({
 									<option value="step-by-step">Step by Step</option>
 									<option value="paginated">Paginated</option>
 									<option value="all-in-one">All in One</option>
-									<option value="one-question-per-page">One Question per Page</option>
+									<option value="one-question-per-page">
+										One Question per Page
+									</option>
 								</select>
 							) : (
-								<p className="text-gray-900">{survey.navigationMode || 'step-by-step'}</p>
+								<p className="text-gray-900">
+									{survey.navigationMode || 'step-by-step'}
+								</p>
 							)}
 						</div>
 					</div>
@@ -305,7 +320,9 @@ const SurveyDetailModal: React.FC<SurveyDetailModalProps> = ({
 								className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
 							/>
 						) : (
-							<p className="text-gray-900">{survey.description || 'No description'}</p>
+							<p className="text-gray-900">
+								{survey.description || 'No description'}
+							</p>
 						)}
 					</div>
 
@@ -323,22 +340,32 @@ const SurveyDetailModal: React.FC<SurveyDetailModalProps> = ({
 								className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
 							/>
 						) : (
-							<p className="text-gray-900">{survey.instructions || 'No instructions'}</p>
+							<p className="text-gray-900">
+								{survey.instructions || 'No instructions'}
+							</p>
 						)}
 					</div>
 
 					{/* Question Bank Information */}
 					{survey.questionBankId && (
 						<div className="bg-gray-50 p-4 rounded-lg">
-							<h4 className="text-sm font-medium text-gray-700 mb-2">Question Bank</h4>
+							<h4 className="text-sm font-medium text-gray-700 mb-2">
+								Question Bank
+							</h4>
 							<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 								<div>
 									<label className="block text-xs text-gray-500">Name</label>
-									<p className="text-sm text-gray-900">{survey.questionBankId.name}</p>
+									<p className="text-sm text-gray-900">
+										{survey.questionBankId.name}
+									</p>
 								</div>
 								<div>
-									<label className="block text-xs text-gray-500">Description</label>
-									<p className="text-sm text-gray-900">{survey.questionBankId.description || 'No description'}</p>
+									<label className="block text-xs text-gray-500">
+										Description
+									</label>
+									<p className="text-sm text-gray-900">
+										{survey.questionBankId.description || 'No description'}
+									</p>
 								</div>
 							</div>
 						</div>
@@ -350,20 +377,28 @@ const SurveyDetailModal: React.FC<SurveyDetailModalProps> = ({
 						<div className="grid grid-cols-2 md:grid-cols-4 gap-4">
 							<div>
 								<label className="block text-xs text-gray-500">Questions</label>
-								<p className="text-lg font-semibold text-blue-600">{survey.questions?.length || 0}</p>
+								<p className="text-lg font-semibold text-blue-600">
+									{survey.questions?.length || 0}
+								</p>
 							</div>
 							<div>
 								<label className="block text-xs text-gray-500">Responses</label>
-								<p className="text-lg font-semibold text-blue-600">{survey.responseCount || 0}</p>
+								<p className="text-lg font-semibold text-blue-600">
+									{survey.responseCount || 0}
+								</p>
 							</div>
 							<div>
 								<label className="block text-xs text-gray-500">Created</label>
-								<p className="text-sm text-gray-900">{new Date(survey.createdAt).toLocaleDateString()}</p>
+								<p className="text-sm text-gray-900">
+									{new Date(survey.createdAt).toLocaleDateString()}
+								</p>
 							</div>
 							<div>
 								<label className="block text-xs text-gray-500">Last Activity</label>
 								<p className="text-sm text-gray-900">
-									{survey.lastActivity ? new Date(survey.lastActivity).toLocaleDateString() : 'No activity'}
+									{survey.lastActivity
+										? new Date(survey.lastActivity).toLocaleDateString()
+										: 'No activity'}
 								</p>
 							</div>
 						</div>
@@ -372,13 +407,21 @@ const SurveyDetailModal: React.FC<SurveyDetailModalProps> = ({
 					{/* Security Settings */}
 					{survey.securitySettings && (
 						<div className="bg-yellow-50 p-4 rounded-lg">
-							<h4 className="text-sm font-medium text-gray-700 mb-3">Security Settings</h4>
+							<h4 className="text-sm font-medium text-gray-700 mb-3">
+								Security Settings
+							</h4>
 							<div className="space-y-2">
 								{Object.entries(survey.securitySettings).map(([key, value]) => (
 									<div key={key} className="flex items-center justify-between">
-										<span className="text-sm text-gray-600 capitalize">{key.replace(/([A-Z])/g, ' $1')}</span>
+										<span className="text-sm text-gray-600 capitalize">
+											{key.replace(/([A-Z])/g, ' $1')}
+										</span>
 										<span className="text-sm text-gray-900">
-											{typeof value === 'boolean' ? (value ? 'Yes' : 'No') : String(value)}
+											{typeof value === 'boolean'
+												? value
+													? 'Yes'
+													: 'No'
+												: String(value)}
 										</span>
 									</div>
 								))}
@@ -389,13 +432,21 @@ const SurveyDetailModal: React.FC<SurveyDetailModalProps> = ({
 					{/* Scoring Settings */}
 					{survey.scoringSettings && (
 						<div className="bg-green-50 p-4 rounded-lg">
-							<h4 className="text-sm font-medium text-gray-700 mb-3">Scoring Settings</h4>
+							<h4 className="text-sm font-medium text-gray-700 mb-3">
+								Scoring Settings
+							</h4>
 							<div className="space-y-2">
 								{Object.entries(survey.scoringSettings).map(([key, value]) => (
 									<div key={key} className="flex items-center justify-between">
-										<span className="text-sm text-gray-600 capitalize">{key.replace(/([A-Z])/g, ' $1')}</span>
+										<span className="text-sm text-gray-600 capitalize">
+											{key.replace(/([A-Z])/g, ' $1')}
+										</span>
 										<span className="text-sm text-gray-900">
-											{typeof value === 'boolean' ? (value ? 'Yes' : 'No') : String(value)}
+											{typeof value === 'boolean'
+												? value
+													? 'Yes'
+													: 'No'
+												: String(value)}
 										</span>
 									</div>
 								))}

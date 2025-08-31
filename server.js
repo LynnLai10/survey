@@ -20,6 +20,9 @@ const superAdminRouter = require('./routes/superAdmin');
 const publicBanksRouter = require('./routes/publicBanks');
 const contactRouter = require('./routes/contact');
 const webhooksRouter = require('./routes/webhooks');
+const checkoutRouter = require('./routes/checkout');
+const ordersRouter = require('./routes/orders');
+const entitlementsRouter = require('./routes/entitlements');
 const verificationRouter = require('./routes/verification');
 const errorHandler = require('./middlewares/errorHandler');
 const { extractTenantFromUrl, multiTenant } = require('./middlewares/multiTenant');
@@ -86,6 +89,10 @@ app.use('/api/sa', superAdminRouter);
 app.use('/api', collectionsRouter);
 // Public Banks API
 app.use('/api/public-banks', publicBanksRouter);
+// Checkout API
+app.use('/api/checkout', checkoutRouter);
+app.use('/api/orders', ordersRouter);
+app.use('/api/entitlements', entitlementsRouter);
 app.use('/api', contactRouter);
 // Webhooks API (must be before JSON parser middleware)
 app.use('/api/webhooks', webhooksRouter);
@@ -99,7 +106,7 @@ app.get('/api/health', (req, res) => {
 		environment: process.env.NODE_ENV || 'development',
 		version: require('./package.json').version,
 	};
-	
+
 	// Basic database connectivity check
 	if (mongoose.connection.readyState === 1) {
 		healthCheck.database = 'connected';
@@ -107,7 +114,7 @@ app.get('/api/health', (req, res) => {
 		healthCheck.database = 'disconnected';
 		return res.status(503).json(healthCheck);
 	}
-	
+
 	res.status(200).json(healthCheck);
 });
 

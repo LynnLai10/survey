@@ -77,14 +77,14 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchToLogin }) => {
 			setCodeSent(true);
 			setCodeError('');
 		} catch (err: unknown) {
-				const apiError = err as AxiosError<{ error?: string; errorType?: string }>;
+			const apiError = err as AxiosError<{ error?: string; errorType?: string }>;
 			const errorMsg =
-				apiError.response?.data?.error || 'Failed to send verification code. Please try again.';
+				apiError.response?.data?.error ||
+				'Failed to send verification code. Please try again.';
 			const errorType = apiError.response?.data?.errorType;
-			
+
 			setCodeError(errorMsg);
-			
-			
+
 			// Reset countdown on error
 			setCountdown(0);
 		} finally {
@@ -95,7 +95,6 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchToLogin }) => {
 	// Verify verification code
 	const verifyCode = useCallback(async () => {
 		if (!verificationCode || !registerForm.email || verifyingCode) return;
-
 
 		setVerifyingCode(true);
 		setCodeError('');
@@ -109,7 +108,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchToLogin }) => {
 			setIsVerified(true);
 			setCodeError('');
 		} catch (err: unknown) {
-				const apiError = err as AxiosError<{ error?: string }>;
+			const apiError = err as AxiosError<{ error?: string }>;
 			const errorMsg =
 				apiError.response?.data?.error || 'Invalid verification code. Please try again.';
 			setCodeError(errorMsg);
@@ -136,7 +135,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchToLogin }) => {
 			// Update register form with verified code
 			setRegisterForm(prev => ({ ...prev, verificationCode: codeValue }));
 		} catch (err: unknown) {
-				const apiError = err as AxiosError<{ error?: string }>;
+			const apiError = err as AxiosError<{ error?: string }>;
 			const errorMsg =
 				apiError.response?.data?.error || 'Invalid verification code. Please try again.';
 			setCodeError(errorMsg);

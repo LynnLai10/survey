@@ -53,7 +53,7 @@ const CreateSurveyWizard: React.FC<CreateSurveyWizardProps> = ({ show, onClose, 
 
 		// Step 3: Display settings
 		navigationMode: NAVIGATION_MODE.STEP_BY_STEP,
-		
+
 		// Security settings
 		antiCheatEnabled: false,
 	});
@@ -111,7 +111,9 @@ const CreateSurveyWizard: React.FC<CreateSurveyWizardProps> = ({ show, onClose, 
 					window.open('/admin/marketplace', '_blank');
 					return;
 				}
-				setError(t('wizard.errors.selectPublicBank', 'Please select at least one public bank'));
+				setError(
+					t('wizard.errors.selectPublicBank', 'Please select at least one public bank')
+				);
 				return;
 			}
 		}
@@ -151,7 +153,10 @@ const CreateSurveyWizard: React.FC<CreateSurveyWizardProps> = ({ show, onClose, 
 				// Quick sample: auto-generate 10 demo questions
 				surveyData.sourceType = SOURCE_TYPE.MANUAL;
 				surveyData.questions = generateSampleQuestions();
-			} else if (formData.contentSource === 'myBanks' || formData.contentSource === 'publicBanks') {
+			} else if (
+				formData.contentSource === 'myBanks' ||
+				formData.contentSource === 'publicBanks'
+			) {
 				// Multi-bank selection
 				if (formData.selectedBanks.length === 1) {
 					// Single bank
@@ -192,7 +197,10 @@ const CreateSurveyWizard: React.FC<CreateSurveyWizardProps> = ({ show, onClose, 
 				onSuccess();
 			}
 		} catch (err: any) {
-			setError(err.response?.data?.error || t('wizard.errors.createFailed', 'Failed to create survey'));
+			setError(
+				err.response?.data?.error ||
+					t('wizard.errors.createFailed', 'Failed to create survey')
+			);
 		} finally {
 			setLoading(false);
 		}
@@ -203,7 +211,13 @@ const CreateSurveyWizard: React.FC<CreateSurveyWizardProps> = ({ show, onClose, 
 			{
 				text: 'How satisfied are you with our service?',
 				type: 'single_choice',
-				options: ['Very satisfied', 'Satisfied', 'Neutral', 'Dissatisfied', 'Very dissatisfied'],
+				options: [
+					'Very satisfied',
+					'Satisfied',
+					'Neutral',
+					'Dissatisfied',
+					'Very dissatisfied',
+				],
 			},
 			{
 				text: 'Which features do you use most? (Select all that apply)',
@@ -256,7 +270,8 @@ const CreateSurveyWizard: React.FC<CreateSurveyWizardProps> = ({ show, onClose, 
 	const showSuccessMessage = () => {
 		// Simple success feedback
 		const message = document.createElement('div');
-		message.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 animate-slide-in';
+		message.className =
+			'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 animate-slide-in';
 		message.innerHTML = `
 			<div class="flex items-center space-x-2">
 				<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -281,7 +296,7 @@ const CreateSurveyWizard: React.FC<CreateSurveyWizardProps> = ({ show, onClose, 
 				<input
 					type='text'
 					value={formData.title}
-					onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+					onChange={e => setFormData(prev => ({ ...prev, title: e.target.value }))}
 					className='w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent'
 					placeholder={t('wizard.basics.titlePlaceholder', 'Enter your survey title')}
 					autoFocus
@@ -294,7 +309,7 @@ const CreateSurveyWizard: React.FC<CreateSurveyWizardProps> = ({ show, onClose, 
 				</label>
 				<select
 					value={formData.language}
-					onChange={(e) => setFormData(prev => ({ ...prev, language: e.target.value }))}
+					onChange={e => setFormData(prev => ({ ...prev, language: e.target.value }))}
 					className='w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent'
 				>
 					<option value='en'>English</option>
@@ -311,10 +326,30 @@ const CreateSurveyWizard: React.FC<CreateSurveyWizardProps> = ({ show, onClose, 
 				</label>
 				<div className='grid grid-cols-1 gap-3'>
 					{[
-						{ value: SURVEY_TYPE.SURVEY, label: 'Survey', icon: ClipboardDocumentListIcon, desc: 'Collect feedback and opinions' },
-						{ value: SURVEY_TYPE.ASSESSMENT, label: 'Assessment', icon: CheckBadgeIcon, desc: 'Test knowledge with scoring' },
-						{ value: SURVEY_TYPE.ONBOARDING, label: 'Onboarding', icon: AcademicCapIcon, desc: 'Employee training and orientation' },
-						{ value: SURVEY_TYPE.LIVE_QUIZ, label: 'Live Quiz', icon: BanknotesIcon, desc: 'Real-time interactive quiz' },
+						{
+							value: SURVEY_TYPE.SURVEY,
+							label: 'Survey',
+							icon: ClipboardDocumentListIcon,
+							desc: 'Collect feedback and opinions',
+						},
+						{
+							value: SURVEY_TYPE.ASSESSMENT,
+							label: 'Assessment',
+							icon: CheckBadgeIcon,
+							desc: 'Test knowledge with scoring',
+						},
+						{
+							value: SURVEY_TYPE.ONBOARDING,
+							label: 'Onboarding',
+							icon: AcademicCapIcon,
+							desc: 'Employee training and orientation',
+						},
+						{
+							value: SURVEY_TYPE.LIVE_QUIZ,
+							label: 'Live Quiz',
+							icon: BanknotesIcon,
+							desc: 'Real-time interactive quiz',
+						},
 					].map(type => (
 						<label
 							key={type.value}
@@ -329,7 +364,9 @@ const CreateSurveyWizard: React.FC<CreateSurveyWizardProps> = ({ show, onClose, 
 								name='surveyType'
 								value={type.value}
 								checked={formData.type === type.value}
-								onChange={(e) => setFormData(prev => ({ ...prev, type: e.target.value as any }))}
+								onChange={e =>
+									setFormData(prev => ({ ...prev, type: e.target.value as any }))
+								}
 								className='sr-only'
 							/>
 							<type.icon className='w-6 h-6 text-gray-600 mr-3' />
@@ -346,7 +383,8 @@ const CreateSurveyWizard: React.FC<CreateSurveyWizardProps> = ({ show, onClose, 
 			</div>
 
 			{/* Anti-cheat settings for assessments and live quizzes */}
-			{(formData.type === SURVEY_TYPE.ASSESSMENT || formData.type === SURVEY_TYPE.LIVE_QUIZ) && (
+			{(formData.type === SURVEY_TYPE.ASSESSMENT ||
+				formData.type === SURVEY_TYPE.LIVE_QUIZ) && (
 				<div>
 					<label className='block text-sm font-medium text-gray-700 mb-3'>
 						Security Settings
@@ -356,13 +394,21 @@ const CreateSurveyWizard: React.FC<CreateSurveyWizardProps> = ({ show, onClose, 
 							<input
 								type='checkbox'
 								checked={formData.antiCheatEnabled}
-								onChange={(e) => setFormData(prev => ({ ...prev, antiCheatEnabled: e.target.checked }))}
+								onChange={e =>
+									setFormData(prev => ({
+										...prev,
+										antiCheatEnabled: e.target.checked,
+									}))
+								}
 								className='mr-3 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded'
 							/>
 							<div className='flex-1'>
-								<div className='font-medium text-gray-900'>Enable Anti-Cheat Protection</div>
+								<div className='font-medium text-gray-900'>
+									Enable Anti-Cheat Protection
+								</div>
 								<div className='text-sm text-gray-500'>
-									Prevents copying, pasting, right-clicking, and developer tools access during assessments
+									Prevents copying, pasting, right-clicking, and developer tools
+									access during assessments
 								</div>
 							</div>
 						</label>
@@ -392,7 +438,13 @@ const CreateSurveyWizard: React.FC<CreateSurveyWizardProps> = ({ show, onClose, 
 							name='contentSource'
 							value='myBanks'
 							checked={formData.contentSource === 'myBanks'}
-							onChange={() => setFormData(prev => ({ ...prev, contentSource: 'myBanks', selectedBanks: [] }))}
+							onChange={() =>
+								setFormData(prev => ({
+									...prev,
+									contentSource: 'myBanks',
+									selectedBanks: [],
+								}))
+							}
 							className='sr-only'
 						/>
 						<BanknotesIcon className='w-6 h-6 text-gray-600 mr-3 mt-0.5' />
@@ -422,7 +474,13 @@ const CreateSurveyWizard: React.FC<CreateSurveyWizardProps> = ({ show, onClose, 
 							name='contentSource'
 							value='publicBanks'
 							checked={formData.contentSource === 'publicBanks'}
-							onChange={() => setFormData(prev => ({ ...prev, contentSource: 'publicBanks', selectedBanks: [] }))}
+							onChange={() =>
+								setFormData(prev => ({
+									...prev,
+									contentSource: 'publicBanks',
+									selectedBanks: [],
+								}))
+							}
 							className='sr-only'
 						/>
 						<GlobeAltIcon className='w-6 h-6 text-gray-600 mr-3 mt-0.5' />
@@ -452,13 +510,23 @@ const CreateSurveyWizard: React.FC<CreateSurveyWizardProps> = ({ show, onClose, 
 							name='contentSource'
 							value='quickSample'
 							checked={formData.contentSource === 'quickSample'}
-							onChange={() => setFormData(prev => ({ ...prev, contentSource: 'quickSample', selectedBanks: [] }))}
+							onChange={() =>
+								setFormData(prev => ({
+									...prev,
+									contentSource: 'quickSample',
+									selectedBanks: [],
+								}))
+							}
 							className='sr-only'
 						/>
 						<SparklesIcon className='w-6 h-6 text-gray-600 mr-3 mt-0.5' />
 						<div className='flex-1'>
-							<div className='font-medium text-gray-900'>Quick sample (10 questions)</div>
-							<div className='text-sm text-gray-500'>Auto-generate demo questions to get started</div>
+							<div className='font-medium text-gray-900'>
+								Quick sample (10 questions)
+							</div>
+							<div className='text-sm text-gray-500'>
+								Auto-generate demo questions to get started
+							</div>
 						</div>
 						{formData.contentSource === 'quickSample' && (
 							<CheckIcon className='w-5 h-5 text-blue-500 absolute right-4 top-4' />
@@ -478,13 +546,21 @@ const CreateSurveyWizard: React.FC<CreateSurveyWizardProps> = ({ show, onClose, 
 							name='contentSource'
 							value='manual'
 							checked={formData.contentSource === 'manual'}
-							onChange={() => setFormData(prev => ({ ...prev, contentSource: 'manual', selectedBanks: [] }))}
+							onChange={() =>
+								setFormData(prev => ({
+									...prev,
+									contentSource: 'manual',
+									selectedBanks: [],
+								}))
+							}
 							className='sr-only'
 						/>
 						<ClipboardDocumentListIcon className='w-6 h-6 text-gray-600 mr-3 mt-0.5' />
 						<div className='flex-1'>
 							<div className='font-medium text-gray-900'>Create manually</div>
-							<div className='text-sm text-gray-500'>Add questions one by one after creation</div>
+							<div className='text-sm text-gray-500'>
+								Add questions one by one after creation
+							</div>
 						</div>
 						{formData.contentSource === 'manual' && (
 							<CheckIcon className='w-5 h-5 text-blue-500 absolute right-4 top-4' />
@@ -512,23 +588,31 @@ const CreateSurveyWizard: React.FC<CreateSurveyWizardProps> = ({ show, onClose, 
 												type='checkbox'
 												value={bank._id}
 												checked={formData.selectedBanks.includes(bank._id)}
-												onChange={(e) => {
+												onChange={e => {
 													if (e.target.checked) {
 														setFormData(prev => ({
 															...prev,
-															selectedBanks: [...prev.selectedBanks, bank._id]
+															selectedBanks: [
+																...prev.selectedBanks,
+																bank._id,
+															],
 														}));
 													} else {
 														setFormData(prev => ({
 															...prev,
-															selectedBanks: prev.selectedBanks.filter(id => id !== bank._id)
+															selectedBanks:
+																prev.selectedBanks.filter(
+																	id => id !== bank._id
+																),
 														}));
 													}
 												}}
 												className='mr-3'
 											/>
 											<div className='flex-1'>
-												<div className='font-medium text-sm'>{bank.name}</div>
+												<div className='font-medium text-sm'>
+													{bank.name}
+												</div>
 												<div className='text-xs text-gray-500'>
 													{bank.questions?.length || 0} questions
 												</div>
@@ -541,54 +625,57 @@ const CreateSurveyWizard: React.FC<CreateSurveyWizardProps> = ({ show, onClose, 
 									No question banks available
 								</div>
 							)
-						) : (
-							authorizedPublicBanks.length > 0 ? (
-								<div className='divide-y divide-gray-200'>
-									{authorizedPublicBanks.map(bank => (
-										<label
-											key={bank._id}
-											className='flex items-center p-3 hover:bg-gray-50 cursor-pointer'
-										>
-											<input
-												type='checkbox'
-												value={bank._id}
-												checked={formData.selectedBanks.includes(bank._id)}
-												onChange={(e) => {
-													if (e.target.checked) {
-														setFormData(prev => ({
-															...prev,
-															selectedBanks: [...prev.selectedBanks, bank._id]
-														}));
-													} else {
-														setFormData(prev => ({
-															...prev,
-															selectedBanks: prev.selectedBanks.filter(id => id !== bank._id)
-														}));
-													}
-												}}
-												className='mr-3'
-											/>
-											<div className='flex-1'>
-												<div className='font-medium text-sm'>{bank.title}</div>
-												<div className='text-xs text-gray-500'>
-													{bank.questionCount} questions
-												</div>
-											</div>
-										</label>
-									))}
-								</div>
-							) : (
-								<div className='p-4 text-center'>
-									<p className='text-gray-500 mb-3'>No public banks entitled yet</p>
-									<button
-										type='button'
-										onClick={() => window.open('/admin/marketplace', '_blank')}
-										className='text-blue-600 hover:text-blue-700 text-sm font-medium'
+						) : authorizedPublicBanks.length > 0 ? (
+							<div className='divide-y divide-gray-200'>
+								{authorizedPublicBanks.map(bank => (
+									<label
+										key={bank._id}
+										className='flex items-center p-3 hover:bg-gray-50 cursor-pointer'
 									>
-										Visit Marketplace →
-									</button>
-								</div>
-							)
+										<input
+											type='checkbox'
+											value={bank._id}
+											checked={formData.selectedBanks.includes(bank._id)}
+											onChange={e => {
+												if (e.target.checked) {
+													setFormData(prev => ({
+														...prev,
+														selectedBanks: [
+															...prev.selectedBanks,
+															bank._id,
+														],
+													}));
+												} else {
+													setFormData(prev => ({
+														...prev,
+														selectedBanks: prev.selectedBanks.filter(
+															id => id !== bank._id
+														),
+													}));
+												}
+											}}
+											className='mr-3'
+										/>
+										<div className='flex-1'>
+											<div className='font-medium text-sm'>{bank.title}</div>
+											<div className='text-xs text-gray-500'>
+												{bank.questionCount} questions
+											</div>
+										</div>
+									</label>
+								))}
+							</div>
+						) : (
+							<div className='p-4 text-center'>
+								<p className='text-gray-500 mb-3'>No public banks entitled yet</p>
+								<button
+									type='button'
+									onClick={() => window.open('/admin/marketplace', '_blank')}
+									className='text-blue-600 hover:text-blue-700 text-sm font-medium'
+								>
+									Visit Marketplace →
+								</button>
+							</div>
 						)}
 					</div>
 				</div>
@@ -615,13 +702,20 @@ const CreateSurveyWizard: React.FC<CreateSurveyWizardProps> = ({ show, onClose, 
 							name='navigationMode'
 							value={NAVIGATION_MODE.STEP_BY_STEP}
 							checked={formData.navigationMode === NAVIGATION_MODE.STEP_BY_STEP}
-							onChange={(e) => setFormData(prev => ({ ...prev, navigationMode: e.target.value as any }))}
+							onChange={e =>
+								setFormData(prev => ({
+									...prev,
+									navigationMode: e.target.value as any,
+								}))
+							}
 							className='sr-only'
 						/>
 						<ListBulletIcon className='w-6 h-6 text-gray-600 mr-3' />
 						<div className='flex-1'>
 							<div className='font-medium text-gray-900'>List View</div>
-							<div className='text-sm text-gray-500'>All questions on one scrollable page</div>
+							<div className='text-sm text-gray-500'>
+								All questions on one scrollable page
+							</div>
 						</div>
 						{formData.navigationMode === NAVIGATION_MODE.STEP_BY_STEP && (
 							<CheckIcon className='w-5 h-5 text-blue-500 absolute right-4' />
@@ -639,14 +733,23 @@ const CreateSurveyWizard: React.FC<CreateSurveyWizardProps> = ({ show, onClose, 
 							type='radio'
 							name='navigationMode'
 							value={NAVIGATION_MODE.ONE_QUESTION_PER_PAGE}
-							checked={formData.navigationMode === NAVIGATION_MODE.ONE_QUESTION_PER_PAGE}
-							onChange={(e) => setFormData(prev => ({ ...prev, navigationMode: e.target.value as any }))}
+							checked={
+								formData.navigationMode === NAVIGATION_MODE.ONE_QUESTION_PER_PAGE
+							}
+							onChange={e =>
+								setFormData(prev => ({
+									...prev,
+									navigationMode: e.target.value as any,
+								}))
+							}
 							className='sr-only'
 						/>
 						<RectangleStackIcon className='w-6 h-6 text-gray-600 mr-3' />
 						<div className='flex-1'>
 							<div className='font-medium text-gray-900'>One per Page</div>
-							<div className='text-sm text-gray-500'>Focus on one question at a time</div>
+							<div className='text-sm text-gray-500'>
+								Focus on one question at a time
+							</div>
 						</div>
 						{formData.navigationMode === NAVIGATION_MODE.ONE_QUESTION_PER_PAGE && (
 							<CheckIcon className='w-5 h-5 text-blue-500 absolute right-4' />
@@ -654,7 +757,9 @@ const CreateSurveyWizard: React.FC<CreateSurveyWizardProps> = ({ show, onClose, 
 					</label>
 
 					<label
-						className={'relative flex items-center p-4 border-2 rounded-lg cursor-pointer transition-all opacity-50 cursor-not-allowed'}
+						className={
+							'relative flex items-center p-4 border-2 rounded-lg cursor-pointer transition-all opacity-50 cursor-not-allowed'
+						}
 					>
 						<input
 							type='radio'
@@ -666,7 +771,9 @@ const CreateSurveyWizard: React.FC<CreateSurveyWizardProps> = ({ show, onClose, 
 						<ViewColumnsIcon className='w-6 h-6 text-gray-400 mr-3' />
 						<div className='flex-1'>
 							<div className='font-medium text-gray-500'>Typeform Style</div>
-							<div className='text-sm text-gray-400'>Coming soon - immersive experience</div>
+							<div className='text-sm text-gray-400'>
+								Coming soon - immersive experience
+							</div>
 						</div>
 					</label>
 				</div>
@@ -689,14 +796,18 @@ const CreateSurveyWizard: React.FC<CreateSurveyWizardProps> = ({ show, onClose, 
 						<dd className='font-medium text-gray-900'>
 							{formData.contentSource === 'manual' && 'Manual creation'}
 							{formData.contentSource === 'quickSample' && '10 sample questions'}
-							{formData.contentSource === 'myBanks' && `${formData.selectedBanks.length} bank(s) selected`}
-							{formData.contentSource === 'publicBanks' && `${formData.selectedBanks.length} public bank(s)`}
+							{formData.contentSource === 'myBanks' &&
+								`${formData.selectedBanks.length} bank(s) selected`}
+							{formData.contentSource === 'publicBanks' &&
+								`${formData.selectedBanks.length} public bank(s)`}
 						</dd>
 					</div>
 					<div className='flex justify-between'>
 						<dt className='text-gray-600'>Navigation:</dt>
 						<dd className='font-medium text-gray-900'>
-							{formData.navigationMode === NAVIGATION_MODE.STEP_BY_STEP ? 'List view' : 'One per page'}
+							{formData.navigationMode === NAVIGATION_MODE.STEP_BY_STEP
+								? 'List view'
+								: 'One per page'}
 						</dd>
 					</div>
 				</dl>
@@ -744,9 +855,13 @@ const CreateSurveyWizard: React.FC<CreateSurveyWizardProps> = ({ show, onClose, 
 									</span>
 								</div>
 								{index < steps.length - 1 && (
-									<div className={`flex-1 h-0.5 mx-4 ${
-										currentStep > step.number ? 'bg-green-500' : 'bg-gray-200'
-									}`} />
+									<div
+										className={`flex-1 h-0.5 mx-4 ${
+											currentStep > step.number
+												? 'bg-green-500'
+												: 'bg-gray-200'
+										}`}
+									/>
 								)}
 							</React.Fragment>
 						))}
@@ -775,7 +890,9 @@ const CreateSurveyWizard: React.FC<CreateSurveyWizardProps> = ({ show, onClose, 
 						disabled={loading}
 					>
 						<ChevronLeftIcon className='w-4 h-4 mr-1' />
-						{currentStep === 1 ? t('wizard.cancel', 'Cancel') : t('wizard.back', 'Back')}
+						{currentStep === 1
+							? t('wizard.cancel', 'Cancel')
+							: t('wizard.back', 'Back')}
 					</button>
 
 					{currentStep < 3 ? (
@@ -814,12 +931,23 @@ const CreateSurveyWizard: React.FC<CreateSurveyWizardProps> = ({ show, onClose, 
 			{/* Add animation styles */}
 			<style jsx>{`
 				@keyframes slide-in {
-					from { transform: translateX(100%); opacity: 0; }
-					to { transform: translateX(0); opacity: 1; }
+					from {
+						transform: translateX(100%);
+						opacity: 0;
+					}
+					to {
+						transform: translateX(0);
+						opacity: 1;
+					}
 				}
 				@keyframes fade-out {
-					from { opacity: 1; }
-					to { opacity: 0; transform: translateY(-10px); }
+					from {
+						opacity: 1;
+					}
+					to {
+						opacity: 0;
+						transform: translateY(-10px);
+					}
 				}
 				.animate-slide-in {
 					animation: slide-in 0.3s ease-out;

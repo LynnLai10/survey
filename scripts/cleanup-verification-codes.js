@@ -23,7 +23,7 @@ async function cleanupVerificationCodes() {
 		// 查找并删除过期的验证码
 		const now = new Date();
 		const result = await VerificationCode.deleteMany({
-			expiresAt: { $lt: now }
+			expiresAt: { $lt: now },
 		});
 
 		console.log(`🧹 清理完成: 删除了 ${result.deletedCount} 个过期的验证码`.green);
@@ -31,11 +31,13 @@ async function cleanupVerificationCodes() {
 		// 可选：清理尝试次数过多的验证码
 		const failedResult = await VerificationCode.deleteMany({
 			attempts: { $gte: 5 },
-			isUsed: false
+			isUsed: false,
 		});
 
 		if (failedResult.deletedCount > 0) {
-			console.log(`🧹 清理完成: 删除了 ${failedResult.deletedCount} 个尝试次数过多的验证码`.green);
+			console.log(
+				`🧹 清理完成: 删除了 ${failedResult.deletedCount} 个尝试次数过多的验证码`.green
+			);
 		}
 
 		// 显示剩余的验证码统计
@@ -43,13 +45,12 @@ async function cleanupVerificationCodes() {
 		const activeCount = await VerificationCode.countDocuments({
 			isUsed: false,
 			expiresAt: { $gte: now },
-			attempts: { $lt: 5 }
+			attempts: { $lt: 5 },
 		});
 
 		console.log(`📊 统计信息:`.cyan);
 		console.log(`   总验证码数量: ${remainingCount}`.cyan);
 		console.log(`   活跃验证码数量: ${activeCount}`.cyan);
-
 	} catch (error) {
 		console.error('❌ 清理过程中发生错误:'.red, error.message);
 		process.exit(1);
@@ -66,7 +67,7 @@ if (require.main === module) {
 			console.log('✨ 验证码清理任务完成'.green);
 			process.exit(0);
 		})
-		.catch((error) => {
+		.catch(error => {
 			console.error('💥 清理任务失败:'.red, error.message);
 			process.exit(1);
 		});

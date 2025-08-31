@@ -22,7 +22,9 @@ router.get(
 	asyncHandler(async (req, res) => {
 		const user = await User.findById(req.user.id).select('companyId');
 		const companyId = user?.companyId || null;
-		const items = await Collection.find(companyId ? { companyId } : { createdBy: req.user.id }).lean();
+		const items = await Collection.find(
+			companyId ? { companyId } : { createdBy: req.user.id }
+		).lean();
 		res.json({ success: true, data: items });
 	})
 );
@@ -71,7 +73,10 @@ router.patch(
 		const data = collectionUpdateSchema.parse(req.body);
 		const user = await User.findById(req.user.id).select('companyId');
 		const updated = await Collection.findOneAndUpdate(
-			{ _id: req.params.id, $or: [{ companyId: user?.companyId }, { createdBy: req.user.id }] },
+			{
+				_id: req.params.id,
+				$or: [{ companyId: user?.companyId }, { createdBy: req.user.id }],
+			},
 			data,
 			{ new: true }
 		);
@@ -115,7 +120,10 @@ router.patch(
 		const { surveyIds } = collectionSurveysUpdateSchema.parse(req.body);
 		const user = await User.findById(req.user.id).select('companyId');
 		const updated = await Collection.findOneAndUpdate(
-			{ _id: req.params.id, $or: [{ companyId: user?.companyId }, { createdBy: req.user.id }] },
+			{
+				_id: req.params.id,
+				$or: [{ companyId: user?.companyId }, { createdBy: req.user.id }],
+			},
 			{ surveyIds },
 			{ new: true }
 		);

@@ -144,8 +144,12 @@ export const useAggressiveAntiCheating = (enabled: boolean = true) => {
 
 			// Remove all event listeners
 			events.forEach(({ name, handler }) => {
-				document.removeEventListener(name, handler as (e: Event) => void, { capture: true });
-				document.removeEventListener(name, handler as (e: Event) => void, { capture: false });
+				document.removeEventListener(name, handler as (e: Event) => void, {
+					capture: true,
+				});
+				document.removeEventListener(name, handler as (e: Event) => void, {
+					capture: false,
+				});
 				window.removeEventListener(name, handler as (e: Event) => void, { capture: true });
 			});
 

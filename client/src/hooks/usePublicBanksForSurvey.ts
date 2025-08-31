@@ -12,9 +12,9 @@ export interface PublicBankForSurvey {
 	lastUpdated: string;
 	type: 'FREE' | 'PAID';
 	price?: number;
-	accessType: 'Free' | 'Owned' | 'Subscription' | 'Locked';
+	accessType: 'Owned' | 'Subscription' | 'Locked';
 	isPublic: true;
-	lockReason?: 'purchase_required' | 'access_required';
+	lockReason?: 'purchase_required';
 }
 
 export interface PublicBanksForSurveyData {

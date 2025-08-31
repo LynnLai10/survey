@@ -14,19 +14,21 @@
 # UAT环境部署
 npm run deploy:uat
 
-# 生产环境部署  
+# 生产环境部署
 npm run deploy:prod
 ```
 
 ### 部署流程说明
 
 #### 1. 部署前检查 (`scripts/pre-deploy.sh`)
+
 - ✅ 验证环境配置
 - ✅ 创建数据库备份
 - ✅ 运行安全检查
 - ✅ 分析迁移需求（干运行模式）
 
 #### 2. 部署后迁移 (`scripts/post-deploy.sh`)
+
 - ✅ 等待应用启动
 - ✅ 执行数据库迁移
 - ✅ 验证迁移结果
@@ -36,6 +38,7 @@ npm run deploy:prod
 ## 🔧 环境变量配置
 
 ### 必需环境变量
+
 ```bash
 # 数据库连接
 MONGODB_URI=mongodb://username:password@host:port/database
@@ -46,6 +49,7 @@ NODE_ENV=production
 ```
 
 ### 可选迁移配置
+
 ```bash
 # 迁移控制
 AUTO_MIGRATE_SURVEYS=true          # 是否自动迁移 (默认: true)
@@ -61,6 +65,7 @@ APP_URL=http://localhost:5050       # 应用URL，用于健康检查
 ```
 
 ### 通知配置
+
 ```bash
 # Webhook通知 (可选)
 DEPLOYMENT_WEBHOOK_URL=https://hooks.slack.com/...
@@ -69,12 +74,14 @@ DEPLOYMENT_WEBHOOK_URL=https://hooks.slack.com/...
 ## 📊 迁移策略
 
 ### 自动迁移行为
+
 1. **创建默认公司**: 如不存在，创建slug为`default`的公司
 2. **迁移旧数据**: 将所有`companyId`为空的surveys分配给默认公司
 3. **解决冲突**: 自动重命名冲突的slug（保持第一个不变，其他添加后缀）
 4. **验证完整性**: 确保所有surveys都有`companyId`
 
 ### 数据隔离
+
 - ✅ 不同公司可以有相同slug的surveys
 - ✅ 多租户路由：`/:companySlug/assessment/:slug`
 - ✅ 向后兼容：现有非多租户URL继续工作
@@ -101,6 +108,7 @@ npm run migrate:auto
 ## 🔍 部署验证
 
 ### 健康检查端点
+
 ```bash
 # 基础健康检查
 GET /api/health
@@ -108,7 +116,7 @@ GET /api/health
 # 响应示例
 {
   "uptime": 123.45,
-  "message": "OK", 
+  "message": "OK",
   "timestamp": "2025-08-30T04:00:00.000Z",
   "environment": "production",
   "version": "1.0.0",
@@ -117,11 +125,12 @@ GET /api/health
 ```
 
 ### 功能验证
+
 ```bash
 # 测试非多租户访问
 curl http://localhost:5050/api/assessment/legacy-slug
 
-# 测试多租户访问  
+# 测试多租户访问
 curl http://localhost:5050/company-slug/api/assessment/survey-slug
 
 # 测试数据隔离
@@ -136,39 +145,39 @@ curl http://localhost:5050/company2/api/assessment/shared-slug
 ```yaml
 name: Deploy to UAT
 on:
-  push:
-    branches: [uat]
+    push:
+        branches: [uat]
 
 jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: '20'
-      
-      - name: Install dependencies
-        run: npm ci
-      
-      - name: Run pre-deployment checks
-        env:
-          MONGODB_URI: ${{ secrets.UAT_MONGODB_URI }}
-          DEPLOY_ENV: uat
-        run: npm run deploy:pre
-      
-      - name: Deploy application
-        # 你的部署逻辑 (Docker, AWS, 等)
-        run: |
-          # 部署应用到UAT环境
-          echo "Deploying application..."
-      
-      - name: Run post-deployment migration
-        env:
-          MONGODB_URI: ${{ secrets.UAT_MONGODB_URI }}
-          DEPLOY_ENV: uat
-          APP_URL: https://uat.sigmaq.co
-        run: npm run deploy:post
+    deploy:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+            - uses: actions/setup-node@v3
+              with:
+                  node-version: '20'
+
+            - name: Install dependencies
+              run: npm ci
+
+            - name: Run pre-deployment checks
+              env:
+                  MONGODB_URI: ${{ secrets.UAT_MONGODB_URI }}
+                  DEPLOY_ENV: uat
+              run: npm run deploy:pre
+
+            - name: Deploy application
+              # 你的部署逻辑 (Docker, AWS, 等)
+              run: |
+                  # 部署应用到UAT环境
+                  echo "Deploying application..."
+
+            - name: Run post-deployment migration
+              env:
+                  MONGODB_URI: ${{ secrets.UAT_MONGODB_URI }}
+                  DEPLOY_ENV: uat
+                  APP_URL: https://uat.sigmaq.co
+              run: npm run deploy:post
 ```
 
 ### Docker部署示例
@@ -194,12 +203,14 @@ CMD ["sh", "-c", "npm run deploy:post && npm start"]
 ## 📈 监控和警报
 
 ### 关键指标
+
 - 迁移执行时间
 - 失败率
 - 数据完整性
 - 应用响应时间
 
 ### 日志位置
+
 - 应用日志: `stdout/stderr`
 - 迁移日志: 控制台输出
 - 备份位置: `./backups/YYYYMMDD_HHMMSS/`
@@ -209,29 +220,32 @@ CMD ["sh", "-c", "npm run deploy:post && npm start"]
 ### 常见问题
 
 1. **迁移失败**
-   ```bash
-   # 检查日志
-   npm run migrate:analyze
-   
-   # 手动运行迁移
-   npm run migrate
-   ```
+
+    ```bash
+    # 检查日志
+    npm run migrate:analyze
+
+    # 手动运行迁移
+    npm run migrate
+    ```
 
 2. **数据库连接失败**
-   ```bash
-   # 验证环境变量
-   echo $MONGODB_URI
-   
-   # 测试连接
-   node -e "require('mongoose').connect(process.env.MONGODB_URI).then(() => console.log('OK'))"
-   ```
+
+    ```bash
+    # 验证环境变量
+    echo $MONGODB_URI
+
+    # 测试连接
+    node -e "require('mongoose').connect(process.env.MONGODB_URI).then(() => console.log('OK'))"
+    ```
 
 3. **索引冲突**
-   - 检查是否有重复的slug
-   - 手动解决slug冲突
-   - 删除旧的全局唯一索引
+    - 检查是否有重复的slug
+    - 手动解决slug冲突
+    - 删除旧的全局唯一索引
 
 ### 回滚流程
+
 1. 停止新版本应用
 2. 从备份恢复数据库
 3. 部署旧版本应用
@@ -240,6 +254,7 @@ CMD ["sh", "-c", "npm run deploy:post && npm start"]
 ## 📞 支持
 
 如果遇到部署问题：
+
 1. 检查环境变量配置
 2. 查看迁移日志
 3. 验证数据库连接

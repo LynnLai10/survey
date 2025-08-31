@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const PublicBank = require('../models/PublicBank');
-const BankPurchase = require('../models/BankPurchase');
 const Entitlement = require('../models/Entitlement');
 const User = require('../models/User');
 const Company = require('../models/Company');
@@ -247,11 +246,6 @@ router.get('/for-survey', async (req, res) => {
 				hasAccess = true;
 				accessType = 'Owned';
 			}
-			// Check if it's free
-			else if (bank.type === 'free') {
-				hasAccess = true;
-				accessType = 'Free';
-			}
 			// Check if user has premium subscription that includes paid banks
 			else if (user && user.subscription && user.subscription.plan === 'premium') {
 				hasAccess = true;
@@ -282,7 +276,7 @@ router.get('/for-survey', async (req, res) => {
 				lockedBanks.push({
 					...bankData,
 					accessType: 'Locked',
-					lockReason: bank.type === 'paid' ? 'purchase_required' : 'access_required',
+					lockReason: 'purchase_required',
 				});
 			}
 		});
@@ -364,6 +358,89 @@ router.post('/:id/attach', jwtAuth, async (req, res) => {
 	}
 });
 
+// POST /api/public-banks/:id/claim-free - Alias for attach (claim free bank)
+router.post('/:id/claim-free', jwtAuth, async (req, res) => {
+	try {
+		const bank = await PublicBank.findOne({
+			_id: req.params.id,
+			isActive: true,
+			isPublished: true,
+		});
+
+		if (!bank) {
+			return res.status(404).json({ error: 'Question bank not found' });
+		}
+
+		if (bank.type !== 'free') {
+			return res.status(400).json({ error: 'This bank is not free' });
+		}
+
+		const resolveUser = async (req, select) => {
+			const raw = req.user && (req.user.id || req.user._id || req.user);
+			if (!raw) return null;
+			if (mongoose.Types.ObjectId.isValid(raw)) {
+				return await User.findById(raw).select(select);
+			}
+			return await User.findOne({ $or: [{ email: raw }, { username: raw }] }).select(select);
+		};
+		const user = await resolveUser(req, 'companyId');
+
+		if (!user || !user.companyId) {
+			return res.status(403).json({ error: 'Company not found' });
+		}
+
+		// Check if already has access
+		const hasAccess = await Entitlement.hasAccess(user.companyId, bank._id);
+		if (hasAccess) {
+			return res.status(400).json({ error: 'You already have access to this question bank' });
+		}
+
+		// Grant free access (idempotent)
+		const entitlement = await Entitlement.grantFreeAccess(user.companyId, bank._id, user._id);
+
+		// Create order record for free item
+		const Order = require('../models/Order');
+		const order = new Order({
+			companyId: user.companyId,
+			bankId: bank._id,
+			amount: 0,
+			currency: 'USD',
+			status: 'paid',
+			type: 'free',
+		});
+		await order.save();
+
+		// Increment usage count if newly created
+		if (entitlement.createdAt.getTime() === entitlement.updatedAt.getTime()) {
+			if (typeof bank.incrementUsage === 'function') {
+				await bank.incrementUsage();
+			}
+		}
+
+		res.json({
+			success: true,
+			message: 'Free question bank claimed successfully',
+			entitlement: {
+				bankId: bank._id,
+				bankTitle: bank.title,
+				accessType: entitlement.accessType,
+				grantedAt: entitlement.grantedAt,
+			},
+			order: {
+				orderId: order._id,
+				status: order.status,
+				amount: order.amount,
+			},
+		});
+	} catch (error) {
+		console.error('Error claiming free bank:', error);
+		res.status(500).json({
+			error: 'Failed to claim free question bank',
+			details: error.message,
+		});
+	}
+});
+
 // POST /api/public-banks/:id/buy-once - Create Stripe checkout session for one-time purchase
 router.post('/:id/buy-once', jwtAuth, async (req, res) => {
 	try {
@@ -371,11 +448,10 @@ router.post('/:id/buy-once', jwtAuth, async (req, res) => {
 			_id: req.params.id,
 			isActive: true,
 			isPublished: true,
-			type: 'paid',
 		});
 
 		if (!bank) {
-			return res.status(404).json({ error: 'Paid question bank not found' });
+			return res.status(404).json({ error: 'Question bank not found' });
 		}
 
 		const resolveUser = async (req, select) => {
@@ -398,7 +474,7 @@ router.post('/:id/buy-once', jwtAuth, async (req, res) => {
 			return res.status(400).json({ error: 'You already have access to this question bank' });
 		}
 
-		// Create Stripe checkout session
+		// Create Stripe checkout session for paid banks
 		if (stripe) {
 			const session = await stripe.checkout.sessions.create({
 				payment_method_types: ['card'],
@@ -458,7 +534,21 @@ router.post('/:id/buy-once', jwtAuth, async (req, res) => {
 				}
 			);
 
-			await bank.incrementPurchaseCount();
+			// Create order record for paid item
+			const Order = require('../models/Order');
+			const order = new Order({
+				companyId: user.companyId,
+				bankId: bank._id,
+				amount: bank.priceOneTime || 0,
+				currency: bank.currency || 'USD',
+				status: 'paid',
+				type: 'paid',
+			});
+			await order.save();
+
+			if (typeof bank.incrementPurchaseCount === 'function') {
+				await bank.incrementPurchaseCount();
+			}
 
 			res.json({
 				success: true,
@@ -467,6 +557,11 @@ router.post('/:id/buy-once', jwtAuth, async (req, res) => {
 					bankId: bank._id,
 					bankTitle: bank.title,
 					accessType: entitlement.accessType,
+				},
+				order: {
+					orderId: order._id,
+					status: order.status,
+					amount: order.amount,
 				},
 			});
 		}

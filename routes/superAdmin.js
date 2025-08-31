@@ -29,7 +29,7 @@ router.post(
 	'/login',
 	asyncHandler(async (req, res) => {
 		const { username, password } = req.body;
-		
+
 		console.log('Super Admin login attempt:', { username, hasPassword: !!password });
 
 		if (!username || !password) {
@@ -44,8 +44,13 @@ router.post(
 			// Find user by email (include password field)
 			console.log('Searching for user with email:', username);
 			const user = await User.findOne({ email: username }).select('+password');
-			console.log('User found:', user ? { id: user._id, email: user.email, role: user.role, isActive: user.isActive } : null);
-			
+			console.log(
+				'User found:',
+				user
+					? { id: user._id, email: user.email, role: user.role, isActive: user.isActive }
+					: null
+			);
+
 			if (!user) {
 				console.log('No user found for email:', username);
 				return res.status(401).json({
@@ -70,7 +75,7 @@ router.post(
 			console.log('Verifying password...');
 			const isValidPassword = await bcrypt.compare(password, user.password);
 			console.log('Password valid:', isValidPassword);
-			
+
 			if (!isValidPassword) {
 				return res.status(401).json({
 					success: false,
@@ -82,13 +87,13 @@ router.post(
 			// Generate JWT token
 			const jwt = require('jsonwebtoken');
 			const { JWT_SECRET } = require('../middlewares/jwtAuth');
-			
+
 			console.log('Generating JWT token for user:', user._id);
-			console.log('User object before JWT:', { 
+			console.log('User object before JWT:', {
 				hasUser: !!user,
 				userId: user ? user._id : 'NO USER',
 				userEmail: user ? user.email : 'NO EMAIL',
-				userRole: user ? user.role : 'NO ROLE'
+				userRole: user ? user.role : 'NO ROLE',
 			});
 
 			const token = jwt.sign(
@@ -104,7 +109,7 @@ router.post(
 			// Update last login
 			user.lastLoginAt = new Date();
 			await user.save();
-			
+
 			console.log('Login successful for user:', user._id);
 
 			res.json({
@@ -454,7 +459,9 @@ router.get(
 		}
 
 		// Get company user ids (QuestionBank.createdBy stores user id as string)
-		const companyUsers = await User.find({ companyId: company._id }).select('_id name email').lean();
+		const companyUsers = await User.find({ companyId: company._id })
+			.select('_id name email')
+			.lean();
 		const userIdStrings = companyUsers.map(u => u._id.toString());
 
 		const banks = await QuestionBank.find({ createdBy: { $in: userIdStrings } })
@@ -496,14 +503,16 @@ router.get(
 		const userIdStrings = companyUsers.map(u => u._id.toString());
 
 		const surveys = await Survey.find({ createdBy: { $in: userIdStrings } })
-			.select('_id title description type status timeLimit maxAttempts instructions navigationMode createdAt updatedAt questions')
+			.select(
+				'_id title description type status timeLimit maxAttempts instructions navigationMode createdAt updatedAt questions'
+			)
 			.sort({ createdAt: -1 })
 			.lean();
 
 		// Add question count to each survey
 		const surveysWithQuestionCount = surveys.map(survey => ({
 			...survey,
-			questionCount: survey.questions ? survey.questions.length : 0
+			questionCount: survey.questions ? survey.questions.length : 0,
 		}));
 
 		res.json({ success: true, data: surveysWithQuestionCount });
@@ -582,7 +591,7 @@ router.put(
 			'navigationMode',
 			'isActive',
 			'securitySettings',
-			'scoringSettings'
+			'scoringSettings',
 		];
 
 		allowedFields.forEach(field => {
@@ -627,7 +636,9 @@ router.get(
 		}
 
 		// Company users
-		const companyUsers = await User.find({ companyId: company._id }).select('_id isActive').lean();
+		const companyUsers = await User.find({ companyId: company._id })
+			.select('_id isActive')
+			.lean();
 		const userIdStrings = companyUsers.map(u => u._id.toString());
 		const totalUsers = companyUsers.length;
 		const activeUsers = companyUsers.filter(u => u.isActive !== false).length;
@@ -643,7 +654,9 @@ router.get(
 		const totalResponses = await Response.countDocuments({ surveyId: { $in: surveyIds } });
 
 		// Question banks created by these users
-		const totalQuestionBanks = await QuestionBank.countDocuments({ createdBy: { $in: userIdStrings } });
+		const totalQuestionBanks = await QuestionBank.countDocuments({
+			createdBy: { $in: userIdStrings },
+		});
 
 		res.json({
 			success: true,
@@ -1267,18 +1280,19 @@ router.get(
 		const responseCount = await Response.countDocuments({
 			// Assuming responses have a userId or similar field
 			// This might need to be adjusted based on your actual schema
-			$or: [
-				{ userId: userId },
-				{ createdBy: userId },
-			]
+			$or: [{ userId: userId }, { createdBy: userId }],
 		});
 
 		// Get question banks created by this user
 		const questionBankCount = await QuestionBank.countDocuments({ createdBy: userId });
 
 		// Get last activity (most recent survey, response, or question bank)
-		const lastSurvey = await Survey.findOne({ createdBy: userId }).sort({ createdAt: -1 }).select('createdAt');
-		const lastQuestionBank = await QuestionBank.findOne({ createdBy: userId }).sort({ createdAt: -1 }).select('createdAt');
+		const lastSurvey = await Survey.findOne({ createdBy: userId })
+			.sort({ createdAt: -1 })
+			.select('createdAt');
+		const lastQuestionBank = await QuestionBank.findOne({ createdBy: userId })
+			.sort({ createdAt: -1 })
+			.select('createdAt');
 
 		const lastActivities = [
 			lastSurvey?.createdAt,
@@ -1286,9 +1300,10 @@ router.get(
 			user.lastLoginAt,
 		].filter(Boolean);
 
-		const lastActivity = lastActivities.length > 0
-			? new Date(Math.max(...lastActivities.map(d => new Date(d).getTime())))
-			: user.createdAt;
+		const lastActivity =
+			lastActivities.length > 0
+				? new Date(Math.max(...lastActivities.map(d => new Date(d).getTime())))
+				: user.createdAt;
 
 		res.json({
 			success: true,
@@ -1594,7 +1609,16 @@ router.get(
 router.post(
 	'/public-banks',
 	asyncHandler(async (req, res) => {
-		const { title, description, type, priceOneTime, tags, locales, isActive = true, isPublished = true } = req.body;
+		const {
+			title,
+			description,
+			type,
+			priceOneTime,
+			tags,
+			locales,
+			isActive = true,
+			isPublished = true,
+		} = req.body;
 
 		// Validation
 		if (!title || !description) {
@@ -1649,7 +1673,8 @@ router.post(
 router.put(
 	'/public-banks/:id',
 	asyncHandler(async (req, res) => {
-		const { title, description, type, priceOneTime, tags, locales, isActive, isPublished } = req.body;
+		const { title, description, type, priceOneTime, tags, locales, isActive, isPublished } =
+			req.body;
 
 		const bank = await PublicBank.findById(req.params.id);
 
@@ -1732,7 +1757,9 @@ router.post(
 		} = req.body;
 
 		if (!companyId || !questionBankId) {
-			return res.status(400).json({ success: false, error: 'companyId and questionBankId are required' });
+			return res
+				.status(400)
+				.json({ success: false, error: 'companyId and questionBankId are required' });
 		}
 
 		const company = await Company.findById(companyId).lean();
@@ -1745,16 +1772,24 @@ router.post(
 
 		const sourceBank = await QuestionBank.findById(questionBankId).lean();
 		if (!sourceBank) {
-			return res.status(404).json({ success: false, error: 'Source question bank not found' });
+			return res
+				.status(404)
+				.json({ success: false, error: 'Source question bank not found' });
 		}
 
 		if (!userIdStrings.includes(sourceBank.createdBy)) {
-			return res.status(403).json({ success: false, error: 'Question bank does not belong to the specified company' });
+			return res
+				.status(403)
+				.json({
+					success: false,
+					error: 'Question bank does not belong to the specified company',
+				});
 		}
 
 		const newPublicBank = new PublicBank({
 			title: title || sourceBank.name,
-			description: description || sourceBank.description || 'Imported from company question bank',
+			description:
+				description || sourceBank.description || 'Imported from company question bank',
 			type: type === 'paid' ? 'paid' : 'free',
 			priceOneTime: type === 'paid' ? Number(priceOneTime || 0) : 0,
 			tags,

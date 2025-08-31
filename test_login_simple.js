@@ -6,12 +6,11 @@ async function testSimpleLogin() {
 
 		const response = await axios.post('http://localhost:3000/api/sa/login', {
 			username: 'superadmin@system.com',
-			password: 'superadmin123'
+			password: 'superadmin123',
 		});
 
 		console.log('✅ Login successful!');
 		console.log('Response:', response.data);
-
 	} catch (error) {
 		console.log('❌ Login failed:');
 		console.log('Status:', error.response?.status);

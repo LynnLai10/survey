@@ -299,23 +299,28 @@ router.get(
 					// For lean() queries, Map becomes a plain object with $numberLong keys
 					// Check if it has any meaningful keys
 					const keys = Object.keys(response.answers);
-					hasAnswers = keys.length > 0 && keys.some(key => 
-						response.answers[key] !== null && 
-						response.answers[key] !== undefined &&
-						response.answers[key] !== ''
-					);
+					hasAnswers =
+						keys.length > 0 &&
+						keys.some(
+							key =>
+								response.answers[key] !== null &&
+								response.answers[key] !== undefined &&
+								response.answers[key] !== ''
+						);
 				}
 			}
-			
+
 			// Check if response has valid question snapshots
-			const hasSnapshots = response.questionSnapshots && 
+			const hasSnapshots =
+				response.questionSnapshots &&
 				response.questionSnapshots.length > 0 &&
-				response.questionSnapshots.some(snapshot => 
-					snapshot.userAnswer !== null && 
-					snapshot.userAnswer !== undefined &&
-					snapshot.userAnswer !== ''
+				response.questionSnapshots.some(
+					snapshot =>
+						snapshot.userAnswer !== null &&
+						snapshot.userAnswer !== undefined &&
+						snapshot.userAnswer !== ''
 				);
-			
+
 			return hasAnswers || hasSnapshots;
 		});
 
@@ -483,7 +488,6 @@ router.get(
 							ans = r.answers[q.text];
 						}
 					}
-
 
 					if (ans !== undefined && ans !== null) {
 						// Handle different answer value formats

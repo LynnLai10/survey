@@ -17,11 +17,11 @@ class EmailTemplateManager {
 		try {
 			// Check cache first
 			let template = this.templateCache.get(templateName);
-			
+
 			if (!template) {
 				const templatePath = path.join(this.templatesPath, `${templateName}.html`);
 				template = await fs.readFile(templatePath, 'utf8');
-				
+
 				// Cache template for better performance
 				this.templateCache.set(templateName, template);
 			}
@@ -55,35 +55,43 @@ class EmailTemplateManager {
 		});
 
 		// Handle conditional blocks {{#if condition}}...{{/if}}
-		processed = processed.replace(/{{#if\s+(\w+)}}([\s\S]*?){{\/if}}/g, (match, condition, content) => {
-			return data[condition] ? content : '';
-		});
+		processed = processed.replace(
+			/{{#if\s+(\w+)}}([\s\S]*?){{\/if}}/g,
+			(match, condition, content) => {
+				return data[condition] ? content : '';
+			}
+		);
 
 		// Handle array iteration {{#each array}}...{{/each}}
-		processed = processed.replace(/{{#each\s+(\w+)}}([\s\S]*?){{\/each}}/g, (match, arrayName, itemTemplate) => {
-			const array = data[arrayName];
-			if (!Array.isArray(array)) return '';
-			
-			return array.map(item => {
-				if (typeof item === 'string') {
-					let itemHtml = itemTemplate;
-					// Support HTML in array items
-					itemHtml = itemHtml.replace(/{{{this}}}/g, item);
-					itemHtml = itemHtml.replace(/{{this}}/g, item);
-					return itemHtml;
-				} else if (typeof item === 'object') {
-					let itemHtml = itemTemplate;
-					Object.keys(item).forEach(key => {
-						const htmlItemPlaceholder = new RegExp(`{{{${key}}}}`, 'g');
-						const itemPlaceholder = new RegExp(`{{${key}}}`, 'g');
-						itemHtml = itemHtml.replace(htmlItemPlaceholder, item[key] || '');
-						itemHtml = itemHtml.replace(itemPlaceholder, item[key] || '');
-					});
-					return itemHtml;
-				}
-				return '';
-			}).join('');
-		});
+		processed = processed.replace(
+			/{{#each\s+(\w+)}}([\s\S]*?){{\/each}}/g,
+			(match, arrayName, itemTemplate) => {
+				const array = data[arrayName];
+				if (!Array.isArray(array)) return '';
+
+				return array
+					.map(item => {
+						if (typeof item === 'string') {
+							let itemHtml = itemTemplate;
+							// Support HTML in array items
+							itemHtml = itemHtml.replace(/{{{this}}}/g, item);
+							itemHtml = itemHtml.replace(/{{this}}/g, item);
+							return itemHtml;
+						} else if (typeof item === 'object') {
+							let itemHtml = itemTemplate;
+							Object.keys(item).forEach(key => {
+								const htmlItemPlaceholder = new RegExp(`{{{${key}}}}`, 'g');
+								const itemPlaceholder = new RegExp(`{{${key}}}`, 'g');
+								itemHtml = itemHtml.replace(htmlItemPlaceholder, item[key] || '');
+								itemHtml = itemHtml.replace(itemPlaceholder, item[key] || '');
+							});
+							return itemHtml;
+						}
+						return '';
+					})
+					.join('');
+			}
+		);
 
 		return processed;
 	}

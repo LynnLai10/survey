@@ -140,7 +140,7 @@ router.post(
 				},
 			});
 		} catch (error) {
-				res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
+			res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
 				success: false,
 				error: 'Login failed. Please try again.',
 			});
@@ -157,9 +157,8 @@ router.post(
 	'/register',
 	asyncHandler(async (req, res) => {
 		const { name, email, password, companyName, verificationCode } = req.body;
-		
-		const VerificationCode = require('../../models/VerificationCode');
 
+		const VerificationCode = require('../../models/VerificationCode');
 
 		// Validation
 		if (!name || !email || !password) {
@@ -175,10 +174,12 @@ router.post(
 				error: 'Password must be at least 8 characters long',
 			});
 		}
-		
+
 		// Email verification check (skip in development environment)
-		const skipEmailVerification = process.env.NODE_ENV === 'development' || process.env.SKIP_EMAIL_VERIFICATION === 'true';
-		
+		const skipEmailVerification =
+			process.env.NODE_ENV === 'development' ||
+			process.env.SKIP_EMAIL_VERIFICATION === 'true';
+
 		if (!skipEmailVerification) {
 			if (!verificationCode) {
 				return res.status(HTTP_STATUS.BAD_REQUEST).json({
@@ -188,7 +189,10 @@ router.post(
 			}
 
 			// Check the verification code (don't mark as used yet)
-			const checkResult = await VerificationCode.checkCode(email.toLowerCase(), verificationCode);
+			const checkResult = await VerificationCode.checkCode(
+				email.toLowerCase(),
+				verificationCode
+			);
 			if (!checkResult.success) {
 				return res.status(HTTP_STATUS.BAD_REQUEST).json({
 					success: false,
@@ -275,7 +279,6 @@ router.post(
 				},
 			});
 		} catch (error) {
-	
 			// More specific error messages
 			let errorMessage = 'Registration failed. Please try again.';
 			let errorType = 'registration_failed';

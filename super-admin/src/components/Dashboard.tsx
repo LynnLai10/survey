@@ -116,7 +116,7 @@ const Dashboard: React.FC = () => {
 
 	const getCurrentTabName = () => {
 		const pathname = location.pathname;
-		
+
 		// Handle routes with parameters
 		if (pathname.startsWith('/companies')) {
 			return 'Companies';
@@ -136,7 +136,7 @@ const Dashboard: React.FC = () => {
 		if (pathname.startsWith('/overview')) {
 			return 'Overview';
 		}
-		
+
 		// Fallback to exact match
 		const currentNav = navigation.find(nav => nav.path === pathname);
 		return currentNav ? currentNav.name : 'Dashboard';

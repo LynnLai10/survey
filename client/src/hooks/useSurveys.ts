@@ -238,7 +238,6 @@ export const useSurveys = () => {
 	};
 
 	const openEditModal = (survey: Survey) => {
-
 		// Extract the ID if questionBankId is an object
 		let questionBankId = survey.questionBankId;
 		if (questionBankId && typeof questionBankId === 'object') {

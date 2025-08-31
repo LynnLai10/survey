@@ -206,7 +206,9 @@ const IndividualStatsPanel: React.FC<Props> = ({ onClose, response, details, coh
 					{/* Device Information */}
 					{details?.candidateInfo?.metadata && (
 						<div>
-							<div className='font-semibold text-gray-800 mb-2'>Device Information</div>
+							<div className='font-semibold text-gray-800 mb-2'>
+								Device Information
+							</div>
 							<div className='bg-gray-50 rounded p-3'>
 								<div className='grid grid-cols-1 md:grid-cols-2 gap-3'>
 									<div>
@@ -225,9 +227,10 @@ const IndividualStatsPanel: React.FC<Props> = ({ onClose, response, details, coh
 										<div className='md:col-span-2'>
 											<div className='text-xs text-gray-500'>Location</div>
 											<div className='text-sm font-medium'>
-												{(details.candidateInfo.metadata.geo.city || '-') + 
-													', ' + 
-													(details.candidateInfo.metadata.geo.country || '-')}
+												{(details.candidateInfo.metadata.geo.city || '-') +
+													', ' +
+													(details.candidateInfo.metadata.geo.country ||
+														'-')}
 											</div>
 										</div>
 									)}
