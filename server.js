@@ -22,6 +22,7 @@ const contactRouter = require('./routes/contact');
 const webhooksRouter = require('./routes/webhooks');
 const checkoutRouter = require('./routes/checkout');
 const ordersRouter = require('./routes/orders');
+const entitlementsRouter = require('./routes/entitlements');
 const verificationRouter = require('./routes/verification');
 const errorHandler = require('./middlewares/errorHandler');
 const { extractTenantFromUrl, multiTenant } = require('./middlewares/multiTenant');
@@ -91,6 +92,7 @@ app.use('/api/public-banks', publicBanksRouter);
 // Checkout API
 app.use('/api/checkout', checkoutRouter);
 app.use('/api/orders', ordersRouter);
+app.use('/api/entitlements', entitlementsRouter);
 app.use('/api', contactRouter);
 // Webhooks API (must be before JSON parser middleware)
 app.use('/api/webhooks', webhooksRouter);

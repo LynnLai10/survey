@@ -23,6 +23,9 @@ import EditSurveyModal from './modals/EditSurveyModal';
 import ScoringModal from './modals/ScoringModal';
 import QuestionBankModal from './modals/QuestionBankModal';
 import EditQuestionBankModal from './modals/EditQuestionBankModal';
+import ShoppingCartModal from './questionBanks/ShoppingCartModal';
+import CheckoutPage from './questionBanks/CheckoutPage';
+import PurchaseHistoryPage from './questionBanks/PurchaseHistoryPage';
 
 const AdminDashboard: React.FC = () => {
 	const {
@@ -48,7 +51,15 @@ const AdminDashboard: React.FC = () => {
 		const preselectedBankId = searchParams.get('preselectedBank');
 
 		if (preselectedBankId) {
-			// Open create survey modal with preselected question bank (Assessment type only)
+			// Clear the URL parameter FIRST to avoid re-triggering
+			const newUrl = new URL(window.location.href);
+			newUrl.searchParams.delete('preselectedBank');
+			newUrl.searchParams.delete('t'); // Remove timestamp parameter too
+			
+			// Use replace instead of replaceState to ensure URL is updated
+			window.history.replaceState({}, document.title, newUrl.pathname + newUrl.search);
+			
+			// Then open create survey modal with preselected question bank (Assessment type only)
 			setNewSurvey(prev => ({
 				...prev,
 				type: 'assessment', // Question banks are only for assessments
@@ -56,14 +67,8 @@ const AdminDashboard: React.FC = () => {
 				questionBankId: preselectedBankId,
 			}));
 			setShowCreateModal(true);
-
-			// Clear the URL parameter immediately to avoid reopening modal
-			const newUrl = new URL(window.location.href);
-			newUrl.searchParams.delete('preselectedBank');
-			newUrl.searchParams.delete('t'); // Remove timestamp parameter too
-			window.history.replaceState({}, document.title, newUrl.pathname + newUrl.search);
 		}
-	}, [location.search, setNewSurvey, setShowCreateModal]); // Listen for URL parameter changes
+	}, [location.search, setNewSurvey, setShowCreateModal]); // Trigger on search params changes to handle preselectedBank
 
 	// Load survey based on URL params when component mounts or params change
 	useEffect(() => {
@@ -148,6 +153,13 @@ const AdminDashboard: React.FC = () => {
                 if (location.pathname.startsWith('/checkout/bank/')) {
                         return <QuestionBankCheckoutPage />;
                 }
+		if (location.pathname === '/checkout') {
+			return <CheckoutPage />;
+		}
+
+		if (location.pathname === '/admin/purchase-history') {
+			return <PurchaseHistoryPage />;
+		}
 
 		// Check if we're on a survey detail route (including tabs)
 		if (params.id && location.pathname.includes('/survey/') && selectedSurvey) {
@@ -206,8 +218,9 @@ const AdminDashboard: React.FC = () => {
 				<ScoringModal />
 				<QuestionBankModal />
 				<EditQuestionBankModal />
+				<ShoppingCartModal />
 			</div>
-			
+
 			{/* Footer - stays at bottom */}
 			<AdminFooter />
 		</div>

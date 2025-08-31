@@ -48,8 +48,9 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
 					<Route path='/admin/collections' element={<Admin />} />
 					<Route path='/admin/collections/:id' element={<Admin />} />
                                         <Route path='/admin/question-bank/:id' element={<Admin />} />
-                                        <Route path='/checkout/bank/:id' element={<Admin />} />
-                                        <Route path='/checkout/success' element={<Admin />} />
+					<Route path='/checkout' element={<Admin />} />
+					<Route path='/checkout/bank/:id' element={<Admin />} />
+					<Route path='/checkout/success' element={<Admin />} />
 					<Route path='/admin/survey/:id' element={<Admin />} />
 					<Route path='/admin/survey/:id/invitations' element={<Admin />} />
 					<Route path='/admin/survey/:id/statistics' element={<Admin />} />
@@ -71,6 +72,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
 					/>
 					<Route path='/admin/profile' element={<Admin />} />
 					<Route path='/admin/billing' element={<Admin />} />
+					<Route path='/admin/purchase-history' element={<Admin />} />
 					<Route path='/admin/:id' element={<Admin />} />
 					{/* Non-tenant routes (backward compatibility) */}
 					<Route path='/survey/:slug' element={<TakeSurvey />} />

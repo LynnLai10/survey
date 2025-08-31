@@ -27,6 +27,41 @@ const CreateSurveyModal: React.FC = () => {
 	const { authorized: authorizedPublicBanks } = usePublicBanksForSurvey();
 	const { t } = useTranslation('admin');
 
+	// Handle modal close - clean up state and URL
+	const handleClose = () => {
+		// Clear the modal
+		setShowCreateModal(false);
+		
+		// Reset the survey state to default
+		setNewSurvey({
+			title: '',
+			description: '',
+			type: SURVEY_TYPE.SURVEY,
+			sourceType: SOURCE_TYPE.CSV,
+			questionBankId: '',
+			selectedQuestions: [],
+			multiQuestionBankConfig: [],
+		});
+		
+		// Clean up URL parameters if any remain
+		const url = new URL(window.location.href);
+		if (url.searchParams.has('preselectedBank') || url.searchParams.has('t')) {
+			url.searchParams.delete('preselectedBank');
+			url.searchParams.delete('t');
+			window.history.replaceState({}, document.title, url.pathname + url.search);
+		}
+		
+		// Force restore body scroll and clear any stuck states
+		setTimeout(() => {
+			document.body.style.overflow = 'unset';
+			document.body.style.position = '';
+			document.body.style.top = '';
+			document.body.style.left = '';
+			// Remove any lingering event listeners or stuck states
+			document.removeEventListener('keydown', () => {});
+		}, 100);
+	};
+
 	// Survey type options with icons and descriptions
 	const surveyTypeOptions = [
 		{
@@ -144,13 +179,13 @@ const CreateSurveyModal: React.FC = () => {
 	return (
 		<Drawer
 			show={showCreateModal}
-			onClose={() => setShowCreateModal(false)}
+			onClose={handleClose}
 			title={t('createModal.title', { defaultValue: 'Create New Survey' })}
 			actions={
 				<div className='flex justify-end space-x-3'>
 					<button
 						type='button'
-						onClick={() => setShowCreateModal(false)}
+						onClick={handleClose}
 						className='btn-secondary'
 					>
 						{t('createModal.cancel', { defaultValue: 'Cancel' })}

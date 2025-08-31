@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAdmin } from '../../contexts/AdminContext';
 import LanguageSwitcher from '../common/LanguageSwitcher';
+import ShoppingCartIcon from '../questionBanks/ShoppingCartIcon';
 import {
 	UserCircleIcon,
 	ArrowRightOnRectangleIcon,
@@ -12,6 +13,7 @@ import {
 	ChevronDownIcon,
 	CreditCardIcon,
 	BuildingOfficeIcon,
+	ClockIcon,
 } from '@heroicons/react/24/outline';
 
 const AdminNavbar: React.FC = () => {
@@ -43,6 +45,12 @@ const AdminNavbar: React.FC = () => {
 
 	const handleCompanyInfoClick = () => {
 		navigate('/admin/profile?tab=company');
+		setProfileDropdownOpen(false);
+		setMobileMenuOpen(false);
+	};
+
+	const handlePurchaseHistoryClick = () => {
+		navigate('/admin/purchase-history');
 		setProfileDropdownOpen(false);
 		setMobileMenuOpen(false);
 	};
@@ -104,6 +112,9 @@ const AdminNavbar: React.FC = () => {
 							+ {t('survey.createSurvey', { defaultValue: 'Create Survey' })}
 						</button>
 
+						{/* Shopping Cart Icon */}
+						<ShoppingCartIcon />
+
 						{/* Profile Dropdown */}
 						<div className='relative' ref={profileDropdownRef}>
 							<button
@@ -130,7 +141,7 @@ const AdminNavbar: React.FC = () => {
 										className='flex items-center gap-3 w-full px-4 py-3 text-left text-gray-700 hover:bg-gray-50 transition-colors duration-200 cursor-pointer'
 									>
 										<UserCircleIcon className='w-5 h-5' />
-										<span className='font-medium'>
+										<span className='text-sm'>
 											{tCommon('navigation.profile', 'Profile')}
 										</span>
 									</button>
@@ -139,7 +150,7 @@ const AdminNavbar: React.FC = () => {
 										className='flex items-center gap-3 w-full px-4 py-3 text-left text-gray-700 hover:bg-gray-50 transition-colors duration-200 cursor-pointer'
 									>
 										<BuildingOfficeIcon className='w-5 h-5' />
-										<span className='font-medium'>
+										<span className='text-sm'>
 											{tCommon('navigation.companyInfo', {
 												defaultValue: 'Company Info',
 											})}
@@ -150,9 +161,20 @@ const AdminNavbar: React.FC = () => {
 										className='flex items-center gap-3 w-full px-4 py-3 text-left text-gray-700 hover:bg-gray-50 transition-colors duration-200 cursor-pointer'
 									>
 										<CreditCardIcon className='w-5 h-5' />
-										<span className='font-medium'>
+										<span className='text-sm'>
 											{tCommon('navigation.billing', {
 												defaultValue: 'Billing',
+											})}
+										</span>
+									</button>
+									<button
+										onClick={handlePurchaseHistoryClick}
+										className='flex items-center gap-3 w-full px-4 py-3 text-left text-gray-700 hover:bg-gray-50 transition-colors duration-200 cursor-pointer'
+									>
+										<ClockIcon className='w-5 h-5' />
+										<span className='text-sm'>
+											{tCommon('navigation.purchaseHistory', {
+												defaultValue: 'Purchase History',
 											})}
 										</span>
 									</button>
@@ -165,7 +187,7 @@ const AdminNavbar: React.FC = () => {
 										className='flex items-center gap-3 w-full px-4 py-3 text-left text-gray-700 hover:bg-red-50 hover:text-red-600 transition-colors duration-200 cursor-pointer'
 									>
 										<ArrowRightOnRectangleIcon className='w-5 h-5' />
-										<span className='font-medium'>
+										<span className='text-sm'>
 											{tCommon('buttons.logout')}
 										</span>
 									</button>
@@ -218,7 +240,7 @@ const AdminNavbar: React.FC = () => {
 							className='flex items-center gap-3 w-full px-3 py-2 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors duration-200 cursor-pointer'
 						>
 							<UserCircleIcon className='w-5 h-5' />
-							<span className='font-medium'>{tCommon('navigation.profile')}</span>
+							<span className='text-sm'>{tCommon('navigation.profile')}</span>
 						</button>
 
 						<button
@@ -226,7 +248,7 @@ const AdminNavbar: React.FC = () => {
 							className='flex items-center gap-3 w-full px-3 py-2 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors duration-200 cursor-pointer'
 						>
 							<BuildingOfficeIcon className='w-5 h-5' />
-							<span className='font-medium'>
+							<span className='text-sm'>
 								{tCommon('navigation.companyInfo', {
 									defaultValue: 'Company Info',
 								})}
@@ -238,8 +260,18 @@ const AdminNavbar: React.FC = () => {
 							className='flex items-center gap-3 w-full px-3 py-2 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors duration-200 cursor-pointer'
 						>
 							<CreditCardIcon className='w-5 h-5' />
-							<span className='font-medium'>
+							<span className='text-sm'>
 								{tCommon('navigation.billing', { defaultValue: 'Billing' })}
+							</span>
+						</button>
+
+						<button
+							onClick={handlePurchaseHistoryClick}
+							className='flex items-center gap-3 w-full px-3 py-2 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors duration-200 cursor-pointer'
+						>
+							<ClockIcon className='w-5 h-5' />
+							<span className='text-sm'>
+								{tCommon('navigation.purchaseHistory', { defaultValue: 'Purchase History' })}
 							</span>
 						</button>
 
@@ -250,7 +282,7 @@ const AdminNavbar: React.FC = () => {
 							className='flex items-center gap-3 w-full px-3 py-2 text-gray-700 hover:bg-red-50 hover:text-red-600 rounded-lg transition-colors duration-200 cursor-pointer'
 						>
 							<ArrowRightOnRectangleIcon className='w-5 h-5' />
-							<span className='font-medium'>{tCommon('buttons.logout')}</span>
+							<span className='text-sm'>{tCommon('buttons.logout')}</span>
 						</button>
 					</div>
 				</div>

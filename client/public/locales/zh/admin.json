@@ -234,6 +234,26 @@
 			"shortText": "简答题：填写文本回答",
 			"selectSingle": "点击选择单个正确答案",
 			"selectMultiple": "勾选多个选项作为正确答案"
+		},
+		"marketplace": {
+			"title": "题库市场",
+			"searchPlaceholder": "按名称或描述搜索...",
+			"filterAll": "全部",
+			"filterFree": "免费",
+			"filterPaid": "付费",
+			"filterByTags": "按标签筛选",
+			"availableTags": "可用标签",
+			"clearTags": "清除全部",
+			"noResults": "未找到题库",
+			"noResultsDescription": "尝试调整搜索条件或筛选器来找到你想要的内容。",
+			"previous": "上一页",
+			"next": "下一页",
+			"pageInfo": "第 {{current}} 页，共 {{total}} 页",
+			"preview": "预览",
+			"get": "获取",
+			"purchase": "购买",
+			"useNow": "立即使用",
+			"processing": "处理中..."
 		}
 	}
 }

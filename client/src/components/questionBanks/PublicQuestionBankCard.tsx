@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { PublicQuestionBank } from '../../hooks/usePublicQuestionBanks';
 import { useTranslation } from 'react-i18next';
 import { useAdmin } from '../../contexts/AdminContext';
+import { useShoppingCart } from '../../contexts/ShoppingCartContext';
 import PublicBankPreviewModal from './PublicBankPreviewModal';
 import CopyQuestionsModal from './CopyQuestionsModal';
 import api from '../../utils/axiosConfig';
@@ -17,6 +18,7 @@ const PublicQuestionBankCard: React.FC<PublicQuestionBankCardProps> = ({
 }) => {
 	const { t } = useTranslation('admin');
 	const { navigate } = useAdmin();
+	const { addItem, isInCart, removeItem } = useShoppingCart();
 	const [loading, setLoading] = useState(false);
 	const [localEntitlement, setLocalEntitlement] = useState(bank.entitlement);
 	const [showPreviewModal, setShowPreviewModal] = useState(false);
@@ -49,8 +51,6 @@ const PublicQuestionBankCard: React.FC<PublicQuestionBankCardProps> = ({
 		switch (entitlement) {
 			case 'Owned':
 				return 'bg-green-100 text-green-700 border-green-200';
-			case 'Included':
-				return 'bg-blue-100 text-blue-700 border-blue-200';
 			case 'Locked':
 				return 'bg-gray-100 text-gray-600 border-gray-200';
 			default:
@@ -159,6 +159,25 @@ const PublicQuestionBankCard: React.FC<PublicQuestionBankCardProps> = ({
 		setCopyData(null);
 	};
 
+	// Handle add to cart
+	const handleAddToCart = () => {
+		const cartItem = {
+			_id: bank._id,
+			title: bank.title,
+			description: bank.description,
+			type: bank.type,
+			price: bank.price,
+			questionCount: bank.questionCount,
+			tags: bank.tags,
+		};
+		addItem(cartItem);
+	};
+
+	// Handle remove from cart
+	const handleRemoveFromCart = () => {
+		removeItem(bank._id);
+	};
+
 	// Render appropriate CTAs based on bank type and entitlement
 	const renderCTAs = () => {
 		const buttons = [];
@@ -174,63 +193,77 @@ const PublicQuestionBankCard: React.FC<PublicQuestionBankCardProps> = ({
 			</button>
 		);
 
-		if (bank.type === 'FREE') {
-			if (localEntitlement === 'Included' || localEntitlement === 'Owned') {
+		// Add to cart button (only for banks not owned)
+		if (localEntitlement !== 'Owned') {
+			if (isInCart(bank._id)) {
+				buttons.push(
+					<button
+						key='removeFromCart'
+						onClick={handleRemoveFromCart}
+						className='flex-1 sm:flex-none px-3 py-2 bg-red-600 text-white text-sm font-medium rounded-lg hover:bg-red-700 transition-colors min-w-0'
+					>
+						{t('questionBanks.marketplace.removeFromCart', 'Remove')}
+					</button>
+				);
+			} else {
+				buttons.push(
+					<button
+						key='addToCart'
+						onClick={handleAddToCart}
+						className='flex-1 sm:flex-none px-3 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors min-w-0'
+					>
+						{t('questionBanks.marketplace.addToCart', 'Add to Cart')}
+					</button>
+				);
+			}
+		}
+
+		if (bank.type.toLowerCase() === 'free') {
+			if (localEntitlement === 'Owned') {
 				buttons.push(
 					<button
 						key='use'
 						onClick={handleUseNow}
-						className='flex-1 sm:flex-none px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors min-w-0'
+						className='flex-1 sm:flex-none px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 transition-colors min-w-0'
 					>
 						{t('questionBanks.marketplace.useNow', 'Use now')}
 					</button>
 				);
 			} else {
-                                buttons.push(
-                                        <button
-                                                key='get'
-                                                onClick={handleGetFree}
-                                                className='flex-1 sm:flex-none px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 transition-colors min-w-0'
-                                        >
-                                                {t('questionBanks.marketplace.get', 'Get')}
-                                        </button>
-                                );
+				// For free banks, show "Get" button if not owned
+				buttons.push(
+					<button
+						key='get'
+						onClick={handleGetFree}
+						className='flex-1 sm:flex-none px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 transition-colors min-w-0'
+					>
+						{t('questionBanks.marketplace.get', 'Get')}
+					</button>
+				);
 			}
 		} else {
-			// PAID bank
-			if (localEntitlement === 'Owned' || localEntitlement === 'Included') {
+			if (localEntitlement === 'Owned') {
 				buttons.push(
 					<button
 						key='use'
 						onClick={handleUseNow}
-						className='flex-1 sm:flex-none px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors min-w-0'
+						className='flex-1 sm:flex-none px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 transition-colors min-w-0'
 					>
 						{t('questionBanks.marketplace.useNow', 'Use now')}
 					</button>
 				);
 			} else {
+				// PAID bank - show purchase button if not owned
 				buttons.push(
 					<button
-						key='buy'
+						key='purchase'
 						onClick={handleBuyOnce}
 						disabled={loading}
-						className='flex-1 sm:flex-none px-3 py-2 bg-purple-600 text-white text-sm font-medium rounded-lg hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors min-w-0'
+						className='flex-1 sm:flex-none px-4 py-2 bg-purple-600 text-white text-sm font-medium rounded-lg hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors min-w-0'
 					>
 						{loading
 							? t('questionBanks.marketplace.processing', 'Processing...')
-							: t('questionBanks.marketplace.buyOnce', 'Buy once')}
-					</button>
-				);
-				buttons.push(
-					<button
-						key='subscribe'
-						onClick={handleSubscribe}
-						disabled={loading}
-						className='flex-1 sm:flex-none px-3 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors min-w-0'
-					>
-						{loading
-							? t('questionBanks.marketplace.processing', 'Processing...')
-							: t('questionBanks.marketplace.subscribe', 'Subscribe')}
+							: t('questionBanks.marketplace.purchase', 'Purchase')}
 					</button>
 				);
 			}
@@ -263,19 +296,18 @@ const PublicQuestionBankCard: React.FC<PublicQuestionBankCardProps> = ({
 						{/* Status Badges - Below Title */}
 						<div className='flex flex-wrap gap-2 mb-3'>
 							{/* Type Badge */}
-                                                        <span
-                                                                className={`px-2 py-1 text-xs font-semibold rounded-full ${getTypeBadgeStyle(bank.type)}`}
-                                                        >
-                                                                {bank.type.toLowerCase() === 'free'
-                                                                        ? 'Free'
-                                                                        : formatPrice(bank.price)}
-                                                        </span>
+							<span
+								className={`px-2 py-1 text-xs font-semibold rounded-full ${getTypeBadgeStyle(bank.type)}`}
+							>
+								{bank.type.toLowerCase() === 'free'
+									? 'Free'
+									: formatPrice(bank.price)}
+							</span>
 							{/* Entitlement Status Badge */}
 							<span
 								className={`px-2 py-1 text-xs font-medium rounded-full border ${getEntitlementStyle(localEntitlement)}`}
 							>
 								{localEntitlement === 'Owned' && '✓ '}
-								{localEntitlement === 'Included' && '◉ '}
 								{localEntitlement === 'Locked' && '🔒 '}
 								{localEntitlement}
 							</span>
