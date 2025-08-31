@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const PublicBank = require('../models/PublicBank');
-const BankPurchase = require('../models/BankPurchase');
 const Entitlement = require('../models/Entitlement');
 const User = require('../models/User');
 const Company = require('../models/Company');
@@ -247,16 +246,11 @@ router.get('/for-survey', async (req, res) => {
 				hasAccess = true;
 				accessType = 'Owned';
 			}
-			// Check if it's free
-			else if (bank.type === 'free') {
-				hasAccess = true;
-				accessType = 'Free';
-			}
-			// Check if user has premium subscription that includes paid banks
-			else if (user && user.subscription && user.subscription.plan === 'premium') {
-				hasAccess = true;
-				accessType = 'Subscription';
-			}
+                        // Check if user has premium subscription that includes paid banks
+                        else if (user && user.subscription && user.subscription.plan === 'premium') {
+                                hasAccess = true;
+                                accessType = 'Subscription';
+                        }
 
 			const safeQuestionCount = Math.max(0, Number(bank.questionCount || 0));
 			const bankData = {
@@ -279,13 +273,13 @@ router.get('/for-survey', async (req, res) => {
 			if (hasAccess) {
 				authorizedBanks.push(bankData);
 			} else {
-				lockedBanks.push({
-					...bankData,
-					accessType: 'Locked',
-					lockReason: bank.type === 'paid' ? 'purchase_required' : 'access_required',
-				});
-			}
-		});
+                                lockedBanks.push({
+                                        ...bankData,
+                                        accessType: 'Locked',
+                                        lockReason: 'purchase_required',
+                                });
+                        }
+                });
 
 		res.json({
 			authorized: authorizedBanks,
@@ -366,17 +360,16 @@ router.post('/:id/attach', jwtAuth, async (req, res) => {
 
 // POST /api/public-banks/:id/buy-once - Create Stripe checkout session for one-time purchase
 router.post('/:id/buy-once', jwtAuth, async (req, res) => {
-	try {
-		const bank = await PublicBank.findOne({
-			_id: req.params.id,
-			isActive: true,
-			isPublished: true,
-			type: 'paid',
-		});
+        try {
+                const bank = await PublicBank.findOne({
+                        _id: req.params.id,
+                        isActive: true,
+                        isPublished: true,
+                });
 
-		if (!bank) {
-			return res.status(404).json({ error: 'Paid question bank not found' });
-		}
+                if (!bank) {
+                        return res.status(404).json({ error: 'Question bank not found' });
+                }
 
 		const resolveUser = async (req, select) => {
 			const raw = req.user && (req.user.id || req.user._id || req.user);
@@ -398,8 +391,8 @@ router.post('/:id/buy-once', jwtAuth, async (req, res) => {
 			return res.status(400).json({ error: 'You already have access to this question bank' });
 		}
 
-		// Create Stripe checkout session
-		if (stripe) {
+                // Create Stripe checkout session for paid banks
+                if (stripe) {
 			const session = await stripe.checkout.sessions.create({
 				payment_method_types: ['card'],
 				line_items: [

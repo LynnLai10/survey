@@ -12,6 +12,8 @@ import SurveyDetailView from './surveys/SurveyDetailView';
 import CandidateDetailView from './surveys/CandidateDetailView';
 import QuestionBanksTabbedView from './questionBanks/QuestionBanksTabbedView';
 import QuestionBankDetailView from './questionBanks/QuestionBankDetailView';
+import QuestionBankCheckoutPage from './questionBanks/QuestionBankCheckoutPage';
+import QuestionBankConfirmationPage from './questionBanks/QuestionBankConfirmationPage';
 import ProfileView from './profile/ProfileView';
 import BillingView from './billing/BillingView';
 import CollectionsListView from './collections/CollectionsListView';
@@ -108,12 +110,12 @@ const AdminDashboard: React.FC = () => {
 			);
 		}
 
-		// Check if we're on a candidate detail route
-		if (location.pathname.includes('/candidate/') && params.responseId && params.surveyId) {
-			return (
-				<CandidateDetailView
-					responseId={params.responseId}
-					onBack={async () => {
+               // Check if we're on a candidate detail route
+               if (location.pathname.includes('/candidate/') && params.responseId && params.surveyId) {
+                       return (
+                               <CandidateDetailView
+                                       responseId={params.responseId}
+                                       onBack={async () => {
 						// Navigate back to survey statistics tab without page refresh
 						navigate(`/admin/survey/${params.surveyId}/statistics`, { replace: true });
 
@@ -135,9 +137,17 @@ const AdminDashboard: React.FC = () => {
 							setTab('detail');
 						}
 					}}
-				/>
-			);
-		}
+                               />
+                       );
+               }
+
+                // Question bank checkout and confirmation pages
+                if (location.pathname.startsWith('/checkout/success')) {
+                        return <QuestionBankConfirmationPage />;
+                }
+                if (location.pathname.startsWith('/checkout/bank/')) {
+                        return <QuestionBankCheckoutPage />;
+                }
 
 		// Check if we're on a survey detail route (including tabs)
 		if (params.id && location.pathname.includes('/survey/') && selectedSurvey) {

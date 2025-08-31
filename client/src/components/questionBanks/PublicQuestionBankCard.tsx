@@ -58,31 +58,20 @@ const PublicQuestionBankCard: React.FC<PublicQuestionBankCardProps> = ({
 		}
 	};
 
-	// Get type badge style
-	const getTypeBadgeStyle = (type: string) => {
-		return type === 'FREE' ? 'bg-green-100 text-green-700' : 'bg-purple-100 text-purple-700';
-	};
+        // Get type badge style
+        const getTypeBadgeStyle = (type: string) => {
+                return type.toLowerCase() === 'free'
+                        ? 'bg-green-100 text-green-700'
+                        : 'bg-purple-100 text-purple-700';
+        };
 
-	// Handle free bank attachment
-	const handleAddToUse = async () => {
-		setLoading(true);
-		try {
-			const response = await api.post(`/public-banks/${bank._id}/attach`);
-
-			if (response.data.success) {
-				setLocalEntitlement('Owned');
-				onEntitlementChange?.();
-
-				// Show success message
-				console.log('Question bank added successfully');
-			}
-		} catch (error: any) {
-			console.error('Error adding question bank:', error);
-			alert(error.response?.data?.error || 'Failed to add question bank');
-		} finally {
-			setLoading(false);
-		}
-	};
+        // Handle navigation to checkout for free banks
+        const handleGetFree = () => {
+                console.log('analytics:free_bank_checkout_clicked', {
+                        bankId: bank._id,
+                });
+                navigate(`/checkout/bank/${bank._id}`);
+        };
 
 	// Handle one-time purchase
 	const handleBuyOnce = async () => {
@@ -197,18 +186,15 @@ const PublicQuestionBankCard: React.FC<PublicQuestionBankCardProps> = ({
 					</button>
 				);
 			} else {
-				buttons.push(
-					<button
-						key='add'
-						onClick={handleAddToUse}
-						disabled={loading}
-						className='flex-1 sm:flex-none px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors min-w-0'
-					>
-						{loading
-							? t('questionBanks.marketplace.adding', 'Adding...')
-							: t('questionBanks.marketplace.addToUse', 'Add to use')}
-					</button>
-				);
+                                buttons.push(
+                                        <button
+                                                key='get'
+                                                onClick={handleGetFree}
+                                                className='flex-1 sm:flex-none px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 transition-colors min-w-0'
+                                        >
+                                                {t('questionBanks.marketplace.get', 'Get')}
+                                        </button>
+                                );
 			}
 		} else {
 			// PAID bank
@@ -277,11 +263,13 @@ const PublicQuestionBankCard: React.FC<PublicQuestionBankCardProps> = ({
 						{/* Status Badges - Below Title */}
 						<div className='flex flex-wrap gap-2 mb-3'>
 							{/* Type Badge */}
-							<span
-								className={`px-2 py-1 text-xs font-semibold rounded-full ${getTypeBadgeStyle(bank.type)}`}
-							>
-								{bank.type === 'FREE' ? 'FREE' : `PAID ${formatPrice(bank.price)}`}
-							</span>
+                                                        <span
+                                                                className={`px-2 py-1 text-xs font-semibold rounded-full ${getTypeBadgeStyle(bank.type)}`}
+                                                        >
+                                                                {bank.type.toLowerCase() === 'free'
+                                                                        ? 'Free'
+                                                                        : formatPrice(bank.price)}
+                                                        </span>
 							{/* Entitlement Status Badge */}
 							<span
 								className={`px-2 py-1 text-xs font-medium rounded-full border ${getEntitlementStyle(localEntitlement)}`}
@@ -340,13 +328,14 @@ const PublicQuestionBankCard: React.FC<PublicQuestionBankCardProps> = ({
 			</div>
 
 			{/* Modals */}
-			<PublicBankPreviewModal
-				isOpen={showPreviewModal}
-				onClose={() => setShowPreviewModal(false)}
-				bankId={bank._id}
-				bankTitle={bank.title}
-				onCopyQuestions={handleCopyQuestions}
-			/>
+                        <PublicBankPreviewModal
+                                isOpen={showPreviewModal}
+                                onClose={() => setShowPreviewModal(false)}
+                                bankId={bank._id}
+                                bankTitle={bank.title}
+                                bankType={bank.type}
+                                onCopyQuestions={handleCopyQuestions}
+                        />
 
 			{copyData && (
 				<CopyQuestionsModal
