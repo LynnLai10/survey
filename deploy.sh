@@ -65,12 +65,16 @@ docker image prune -f
 echo "=== Building and Deploying ==="
 
 # Create .env file with environment variables
-cat > .env << 'EOF'
+cat > .env << EOF
 MONGODB_URI=${MONGO_URI}
 PORT=5173
 NODE_ENV=production
 ADMIN_USERNAME=${ADMIN_USERNAME}
 ADMIN_PASSWORD=${ADMIN_PASSWORD}
+EMAIL_SERVICE_SQS_URL=${EMAIL_SERVICE_SQS_URL}
+AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+AWS_REGION=${AWS_REGION}
 EOF
 
 echo "✅ Environment file created"
@@ -81,7 +85,7 @@ if [ -z "${MONGO_URI}" ]; then
     exit 1
 fi
 
-echo "✅ Using external MongoDB at: ${MONGO_URI}"
+echo "✅ Environment variables validated"
 
 # Build and start services
 echo "Building and starting services..."
