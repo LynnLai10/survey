@@ -227,11 +227,21 @@ pipeline {
 			steps {
 				echo 'Building and deploying backend service...'
 				withVault([configuration: [ vaultUrl: 'https://vault.jiangren.com.au', vaultCredentialId: 'Vault Credential', timeout: 120],
-					vaultSecrets: [[path: 'jr-survey/uat',
-						secretValues: [
-							[vaultKey: 'MONGO_URI']
+					vaultSecrets: [
+						[path: 'jr-survey/uat',
+							secretValues: [
+								[vaultKey: 'MONGO_URI'],
+								[vaultKey: 'EMAIL_SERVICE_SQS_URL']
+							]
+						],
+						[path: 'jenkins_jr_academy/uat',
+							secretValues: [
+								[vaultKey: 'AWS_ACCESS_KEY_ID'],
+								[vaultKey: 'AWS_SECRET_ACCESS_KEY'],
+								[vaultKey: 'AWS_REGION']
+							]
 						]
-					]]
+					]
 				]) {
 					script {
 						echo "Environment variables loaded from Vault"
@@ -272,6 +282,10 @@ pipeline {
 								NODE_ENV=uat
 								ADMIN_USERNAME=${ADMIN_USERNAME}
 								ADMIN_PASSWORD=${ADMIN_PASSWORD}
+								EMAIL_SERVICE_SQS_URL=${EMAIL_SERVICE_SQS_URL}
+								AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+								AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+								AWS_REGION=${AWS_REGION}
 								EOF
 
 								# Stop and remove existing survey containers

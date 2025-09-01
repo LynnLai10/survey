@@ -1,6 +1,7 @@
 const express = require('express');
 const rateLimit = require('express-rate-limit');
 const VerificationCode = require('../models/VerificationCode');
+const User = require('../models/User');
 const { sendVerificationCode } = require('../utils/mailer');
 
 const router = express.Router();
@@ -49,7 +50,6 @@ router.post('/send-code', sendCodeLimiter, async (req, res) => {
 		const normalizedEmail = email.toLowerCase().trim();
 
 		// Check if email is already registered
-		const User = require('../models/User');
 		const existingUser = await User.findOne({ email: normalizedEmail });
 		if (existingUser) {
 			return res.status(400).json({
@@ -90,6 +90,7 @@ router.post('/send-code', sendCodeLimiter, async (req, res) => {
 				expiresIn: 300, // 5 minutes
 			});
 		} catch (emailError) {
+			console.error('Error sending verification email:', emailError);
 			// If email sending fails, delete the created verification code
 			await VerificationCode.findByIdAndDelete(verificationCode._id);
 
@@ -99,6 +100,7 @@ router.post('/send-code', sendCodeLimiter, async (req, res) => {
 			});
 		}
 	} catch (error) {
+		console.error('Error in /send-code:', error);
 		res.status(500).json({
 			success: false,
 			error: 'Server error, please try again later',
@@ -154,6 +156,7 @@ router.post('/verify-code', verifyCodeLimiter, async (req, res) => {
 			});
 		}
 	} catch (error) {
+		console.error('Error in /verify-code:', error);
 		res.status(500).json({
 			success: false,
 			error: 'Server error, please try again later',
@@ -200,6 +203,7 @@ router.get('/check-status/:email', async (req, res) => {
 			},
 		});
 	} catch (error) {
+		console.error('Error in /check-status:', error);
 		res.status(500).json({
 			success: false,
 			error: 'Server error, please try again later',

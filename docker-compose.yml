@@ -22,6 +22,11 @@ services:
             - MONGODB_URI=mongodb://mongodb:27017/survey
             - PORT=5050
             - NODE_ENV=production
+            # AWS Email Service Configuration (from .env.docker)
+            - EMAIL_SERVICE_SQS_URL=${EMAIL_SERVICE_SQS_URL}
+            - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+            - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+            - AWS_REGION=${AWS_REGION:-ap-southeast-2}
         restart: unless-stopped
         depends_on:
             - mongodb

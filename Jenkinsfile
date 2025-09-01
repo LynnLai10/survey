@@ -140,15 +140,24 @@ pipeline {
 				echo 'Deploying backend to EC2...'
 
 				withVault([configuration: [ vaultUrl: 'https://vault.jiangren.com.au', vaultCredentialId: 'Vault Credential', timeout: 120],
-					vaultSecrets: [[path: 'jr-survey/prod',
-						secretValues: [
-							[vaultKey: 'MONGO_URI']
+					vaultSecrets: [
+						[path: 'jr-survey/prod',
+							secretValues: [
+								[vaultKey: 'MONGO_URI'],
+								[vaultKey: 'EMAIL_SERVICE_SQS_URL']
+							]
+						],
+						[path: 'jenkins_jr_academy/prod',
+							secretValues: [
+								[vaultKey: 'AWS_ACCESS_KEY_ID'],
+								[vaultKey: 'AWS_SECRET_ACCESS_KEY'],
+								[vaultKey: 'AWS_REGION']
+							]
 						]
-					]]
+					]
 				]) {
 					script {
 						echo "Environment variables loaded from Vault"
-						echo "MONGO_URI: ${MONGO_URI}"
 
 						// Execute deployment on EC2
 						sshagent(credentials: ["$SSHCreds"]) {
@@ -157,7 +166,7 @@ pipeline {
 								tar -czf - --exclude='.git' --exclude='node_modules' --exclude='client/node_modules' . | ssh -o StrictHostKeyChecking=no $SSHUser@$SSHServerIP 'mkdir -p /home/ubuntu/survey && cd /home/ubuntu/survey && tar -xzf -'
 
 								# Execute deployment script on EC2 with environment variables
-								ssh -o StrictHostKeyChecking=no $SSHUser@$SSHServerIP "cd /home/ubuntu/survey && chmod +x deploy.sh && MONGO_URI='${MONGO_URI}' ADMIN_USERNAME='${ADMIN_USERNAME}' ADMIN_PASSWORD='${ADMIN_PASSWORD}' ./deploy.sh"
+								ssh -o StrictHostKeyChecking=no $SSHUser@$SSHServerIP "cd /home/ubuntu/survey && chmod +x deploy.sh && MONGO_URI='${MONGO_URI}' ADMIN_USERNAME='${ADMIN_USERNAME}' ADMIN_PASSWORD='${ADMIN_PASSWORD}' EMAIL_SERVICE_SQS_URL='${EMAIL_SERVICE_SQS_URL}' AWS_ACCESS_KEY_ID='${AWS_ACCESS_KEY_ID}' AWS_SECRET_ACCESS_KEY='${AWS_SECRET_ACCESS_KEY}' AWS_REGION='${AWS_REGION}' ./deploy.sh"
 							"""
 						}
 					}

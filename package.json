@@ -26,6 +26,7 @@
 		"verify:prod": "UAT_URL=https://sigmaq.co node scripts/verify-uat-deployment.js"
 	},
 	"dependencies": {
+		"@aws-sdk/client-sqs": "^3.879.0",
 		"axios": "^1.10.0",
 		"bcrypt": "^6.0.0",
 		"colors": "^1.4.0",

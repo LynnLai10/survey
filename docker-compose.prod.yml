@@ -12,6 +12,11 @@ services:
             NODE_ENV: production
             ADMIN_USERNAME: ${ADMIN_USERNAME:-admin}
             ADMIN_PASSWORD: ${ADMIN_PASSWORD:-password}
+            # AWS Email Service Configuration
+            EMAIL_SERVICE_SQS_URL: ${EMAIL_SERVICE_SQS_URL}
+            AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+            AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+            AWS_REGION: ${AWS_REGION:-ap-southeast-2}
         ports:
             - '${PORT:-5050}:${PORT:-5050}'
         restart: unless-stopped

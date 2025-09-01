@@ -81,7 +81,6 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchToLogin }) => {
 			const errorMsg =
 				apiError.response?.data?.error ||
 				'Failed to send verification code. Please try again.';
-			const errorType = apiError.response?.data?.errorType;
 
 			setCodeError(errorMsg);
 
@@ -91,31 +90,6 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchToLogin }) => {
 			setSendingCode(false);
 		}
 	}, [registerForm.email, registerForm.name, sendingCode, countdown, i18n.language]);
-
-	// Verify verification code
-	const verifyCode = useCallback(async () => {
-		if (!verificationCode || !registerForm.email || verifyingCode) return;
-
-		setVerifyingCode(true);
-		setCodeError('');
-
-		try {
-			await api.post('/verification/verify-code', {
-				email: registerForm.email,
-				code: verificationCode,
-			});
-
-			setIsVerified(true);
-			setCodeError('');
-		} catch (err: unknown) {
-			const apiError = err as AxiosError<{ error?: string }>;
-			const errorMsg =
-				apiError.response?.data?.error || 'Invalid verification code. Please try again.';
-			setCodeError(errorMsg);
-		} finally {
-			setVerifyingCode(false);
-		}
-	}, [verificationCode, registerForm.email, verifyingCode]);
 
 	// Helper function to verify with specific code value
 	const verifyCodeWithValue = async (codeValue: string) => {
