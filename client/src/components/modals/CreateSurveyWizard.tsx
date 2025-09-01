@@ -91,6 +91,7 @@ const CreateSurveyWizard: React.FC<CreateSurveyWizardProps> = ({ show, onClose, 
 		}
 	}, [show, company]);
 
+
 	const handleNext = () => {
 		// Validate current step
 		if (currentStep === 1) {
@@ -592,18 +593,14 @@ const CreateSurveyWizard: React.FC<CreateSurveyWizardProps> = ({ show, onClose, 
 													if (e.target.checked) {
 														setFormData(prev => ({
 															...prev,
-															selectedBanks: [
-																...prev.selectedBanks,
-																bank._id,
-															],
+															selectedBanks: [...prev.selectedBanks, bank._id],
 														}));
 													} else {
 														setFormData(prev => ({
 															...prev,
-															selectedBanks:
-																prev.selectedBanks.filter(
-																	id => id !== bank._id
-																),
+															selectedBanks: prev.selectedBanks.filter(
+																id => id !== bank._id
+															),
 														}));
 													}
 												}}
@@ -640,10 +637,7 @@ const CreateSurveyWizard: React.FC<CreateSurveyWizardProps> = ({ show, onClose, 
 												if (e.target.checked) {
 													setFormData(prev => ({
 														...prev,
-														selectedBanks: [
-															...prev.selectedBanks,
-															bank._id,
-														],
+														selectedBanks: [...prev.selectedBanks, bank._id],
 													}));
 												} else {
 													setFormData(prev => ({

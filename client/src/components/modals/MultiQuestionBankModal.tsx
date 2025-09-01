@@ -50,6 +50,7 @@ const MultiQuestionBankModal: React.FC<MultiQuestionBankModalProps> = ({
 		}
 	}, [show, initialConfig, questionBanks]);
 
+
 	const createEmptyConfig = (): MultiQuestionBankConfig => ({
 		questionBankId: '',
 		questionCount: 1,
@@ -82,9 +83,11 @@ const MultiQuestionBankModal: React.FC<MultiQuestionBankModalProps> = ({
 		field: keyof MultiQuestionBankConfig,
 		value: unknown
 	) => {
-		const updated = [...configurations];
-		updated[index] = { ...updated[index], [field]: value };
-		setConfigurations(updated);
+		setConfigurations(prev => {
+			const updated = [...prev];
+			updated[index] = { ...updated[index], [field]: value };
+			return updated;
+		});
 	};
 
 	const updateFilter = (configIndex: number, filterField: string, value: unknown) => {
@@ -176,8 +179,8 @@ const MultiQuestionBankModal: React.FC<MultiQuestionBankModalProps> = ({
 	if (!show) return null;
 
 	return (
-		<Modal show={show} onClose={onClose} title='Configure Multi-Question Bank Selection'>
-			<div className='space-y-6 max-h-96 overflow-y-auto'>
+		<Modal show={show} onClose={onClose} title='Configure Multi-Question Bank Selection' size='large'>
+			<div className='space-y-6 max-h-[600px] overflow-y-auto'>
 				{configurations.map((config, index) => (
 					<div key={index} className='border border-gray-200 rounded-lg p-4 bg-gray-50'>
 						<div className='flex justify-between items-center mb-4'>
@@ -196,66 +199,57 @@ const MultiQuestionBankModal: React.FC<MultiQuestionBankModalProps> = ({
 						</div>
 
 						<div className='space-y-4'>
-							{/* Question Bank Selection */}
+							{/* Question Bank Selection - Simple Dropdown */}
 							<div>
 								<label className='block text-sm font-medium text-gray-700 mb-1'>
 									Question Bank *
 								</label>
 								<select
-									value={
-										config.questionBankId
-											? `${config.isPublic ? 'public' : 'local'}:${config.questionBankId}`
-											: ''
-									}
+									value={config.questionBankId || ''}
 									onChange={e => {
-										const value = e.target.value;
-										if (value) {
-											const [type, bankId] = value.split(':');
-											updateConfiguration(index, 'questionBankId', bankId);
-											updateConfiguration(
-												index,
-												'isPublic',
-												type === 'public'
-											);
-										} else {
+										const selectedValue = e.target.value;
+										
+										if (!selectedValue) {
 											updateConfiguration(index, 'questionBankId', '');
 											updateConfiguration(index, 'isPublic', false);
+											return;
+										}
+										
+										// Check if it's a local bank
+										const localBank = questionBanks.find(b => b._id === selectedValue);
+										if (localBank) {
+											updateConfiguration(index, 'questionBankId', selectedValue);
+											updateConfiguration(index, 'isPublic', false);
+											return;
+										}
+										
+										// Check if it's a public bank  
+										const publicBank = publicBanks.find(b => b._id === selectedValue);
+										if (publicBank) {
+											updateConfiguration(index, 'questionBankId', selectedValue);
+											updateConfiguration(index, 'isPublic', true);
+											return;
 										}
 									}}
 									className='w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent'
 								>
 									<option value=''>Select a question bank</option>
-
-									{/* Local Question Banks */}
+									
 									{questionBanks.length > 0 && (
 										<optgroup label='📁 My Banks'>
 											{questionBanks.map(bank => (
-												<option key={bank._id} value={`local:${bank._id}`}>
+												<option key={`local-${bank._id}`} value={bank._id}>
 													{bank.name} ({bank.questions.length} questions)
 												</option>
 											))}
 										</optgroup>
 									)}
-
-									{/* Authorized Public Banks */}
+									
 									{publicBanks.length > 0 && (
-										<optgroup label='🌐 Public Banks (Authorized)'>
+										<optgroup label='🌐 Public Banks'>
 											{publicBanks.map(bank => (
-												<option key={bank._id} value={`public:${bank._id}`}>
-													{bank.title} ({bank.questionCount} questions) -{' '}
-													{bank.accessType}
-												</option>
-											))}
-										</optgroup>
-									)}
-
-									{/* Locked Public Banks */}
-									{lockedPublicBanks.length > 0 && (
-										<optgroup label='🔒 Public Banks (Locked)'>
-											{lockedPublicBanks.map(bank => (
-												<option key={bank._id} value='' disabled>
-													🔒 {bank.title} ({bank.questionCount} questions)
-													- Purchase Required
+												<option key={`public-${bank._id}`} value={bank._id}>
+													{bank.title} ({bank.questionCount} questions)
 												</option>
 											))}
 										</optgroup>
